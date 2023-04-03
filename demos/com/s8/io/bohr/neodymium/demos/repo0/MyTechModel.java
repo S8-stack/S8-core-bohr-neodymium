@@ -5,8 +5,8 @@ import java.util.List;
 import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.lithium.object.LiS8Object;
-import com.s8.io.bohr.lithium.object.LiS8Ref;
+import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.io.bohr.neodymium.object.NdRef;
 
 
 /**
@@ -17,13 +17,13 @@ import com.s8.io.bohr.lithium.object.LiS8Ref;
  * 
  */
 @S8ObjectType(name = "Dclib/MyTechModel")
-public class MyTechModel extends LiS8Object {
+public class MyTechModel extends NdObject {
 
 
 	/**
 	 * 
 	 */
-	private @S8Field(name = "myPurchaser") LiS8Ref<MyTechModel> myPurchaser;
+	private @S8Field(name = "myPurchaser") NdRef<MyTechModel> myPurchaser;
 	
 	
 	private @S8Field(name = "projects") List<MyProject> projects;
