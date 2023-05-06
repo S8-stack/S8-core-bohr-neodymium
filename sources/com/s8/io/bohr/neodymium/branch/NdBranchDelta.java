@@ -3,13 +3,13 @@ package com.s8.io.bohr.neodymium.branch;
 import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_JUMP;
 import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_COMMENT;
 import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_VERSION;
 import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_JUMP;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObjectDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
@@ -25,6 +25,14 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * 
  */
 public class NdBranchDelta {
+
+
+
+
+	/**
+	 * Mandatriy version
+	 */
+	public final long targetVersion;
 
 
 	/**
@@ -49,14 +57,6 @@ public class NdBranchDelta {
 	private String comment;
 
 
-	private boolean hasVersion;
-
-	/**
-	 * 
-	 */
-	private long version;
-
-
 	/**
 	 * 
 	 */
@@ -72,15 +72,11 @@ public class NdBranchDelta {
 	/**
 	 * 
 	 */
-	public NdBranchDelta() {
+	public NdBranchDelta(long version) {
 		super();
+		this.targetVersion = version;
 	}
 
-	
-	public void setVersion(long version) {
-		this.hasVersion = true;
-		this.version = version;
-	}
 	
 	
 	public void setComment(String comment) {
@@ -104,9 +100,24 @@ public class NdBranchDelta {
 
 
 
-	public void consume(NdBranch branch) throws NdIOException {
-		BuildScope scope = branch.createBuildScope();
-		for(NdObjectDelta objectDelta : objectDeltas) { objectDelta.consume(branch, scope); }
+	/**
+	 * 
+	 * @param graph
+	 * @throws NdIOException
+	 */
+	public void consume(NdGraph graph) throws NdIOException {
+		/* check version */
+		if(targetVersion != (graph.version + 1)) { 
+			throw new NdIOException("Mismatch in versions");
+		}
+		
+		BuildScope scope = graph.createBuildContext();
+		for(NdObjectDelta objectDelta : objectDeltas) { 
+			objectDelta.consume(graph, scope); 
+		}
+		
+		/* increment version of graph */
+		graph.version++;
 	}
 
 
@@ -116,24 +127,26 @@ public class NdBranchDelta {
 
 		outflow.putUInt8(OPEN_JUMP);
 		
-		if(hasComment) {
-			outflow.putUInt8(DEFINE_JUMP_COMMENT);
-			outflow.putStringUTF8(comment);
-		}
+		outflow.putUInt64(targetVersion);
 		
-		if(hasVersion) {
-			outflow.putUInt8(DEFINE_JUMP_VERSION);
-			outflow.putUInt64(version);
-		}
 		
 		if(hasTimestamp) {
 			outflow.putUInt8(DEFINE_JUMP_TIMESTAMP);
 			outflow.putUInt64(timestamp);
 		}
+		
+		if(hasComment) {
+			outflow.putUInt8(DEFINE_JUMP_COMMENT);
+			outflow.putStringUTF8(comment);
+		}
 
 		// compose common database
 		//codebaseIO.compose(outflow, false);
-		for(NdObjectDelta objectDelta : objectDeltas) { objectDelta.serialize(outbound, outflow); }
+		for(NdObjectDelta objectDelta : objectDeltas) { 
+		
+			
+			objectDelta.serialize(outbound, outflow); 
+		}
 
 
 		outflow.putUInt8(CLOSE_JUMP);

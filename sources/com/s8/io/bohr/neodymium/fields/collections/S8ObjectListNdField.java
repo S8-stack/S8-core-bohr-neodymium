@@ -263,7 +263,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 			List<T> clonedList = new ArrayList<T>(n);
 			String[] indices = new String[n];
 			for(int i=0; i<n; i++) {
-				indices[i] = value.get(i).S8_index;
+				indices[i] = value.get(i).S8_id;
 			}
 
 			handler.set(clone, clonedList);
@@ -307,7 +307,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 			NdObject item;
 			for(int i=0; i<n; i++) {
 				item = array.get(i);
-				indices[i] = (item != null ? item.S8_index : null);	
+				indices[i] = (item != null ? item.S8_id : null);	
 			}
 		}
 		return new S8ObjectListNdFieldDelta<>(this, indices);
@@ -334,7 +334,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 			obj1 = array1.get(i);
 			if((obj0==null && obj1!=null) || (obj1==null && obj0!=null) // one is null while the other is non-null
 					|| (obj0!=null  && obj1!=null // both non null with different indices
-					&& !obj0.S8_index.equals(obj1.S8_index))) { 
+					&& !obj0.S8_id.equals(obj1.S8_id))) { 
 				return false; 
 			}
 		}
@@ -363,7 +363,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 					writer.write("(");
 					writer.write(value.getClass().getCanonicalName());
 					writer.write("): ");
-					writer.write(value.S8_index.toString());
+					writer.write(value.S8_id.toString());
 				}
 				else {
 					writer.write("null");
@@ -525,7 +525,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 				outflow.putUInt7x(length);
 				for(int i=0; i<length; i++) {
 					T itemObject = list.get(i);
-					outflow.putStringUTF8(itemObject!=null ? itemObject.S8_index : null);
+					outflow.putStringUTF8(itemObject!=null ? itemObject.S8_id : null);
 				}
 			}
 			else {

@@ -5,6 +5,9 @@ import java.io.OutputStreamWriter;
 
 import com.s8.io.bohr.atom.S8BuildException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.codebase.NdCodebaseBuilder;
 import com.s8.io.bohr.neodymium.codebase.NdCodebaseBuilder.UpperLevel;
@@ -31,34 +34,43 @@ public class NdTest02 {
 		initialize(MyBuilding.class, false);
 		
 		
-		NdBranch originBranch = new NdBranch(codebase, "com.toto.123.098", "master", 0x24);
+		NdBranch originBranch = new NdBranch(codebase, "com.toto.123.098", "master");
 		
-		NdBranch workingBranch = originBranch.deepClone();
-		
-	
+
 		MyBuilding building = MyBuilding.create();
-		workingBranch.update(0x25, new NdObject[] { null, building});
+		originBranch.commit(new NdObject[] { null, building});
+		
+		building.variate();
+		originBranch.commit(new NdObject[] { null, building});
+		
+		building.variate();
+		originBranch.commit(new NdObject[] { null, building});
+		
 		
 		// test copy
-		NdBranch testCopy = workingBranch.deepClone();
-		workingBranch.deepCompare(testCopy, writer);
+		NdGraph testCopy = originBranch.cloneHead();
+		originBranch.compareHead(testCopy, writer);
 		
 		
-		originBranch.commit(workingBranch);
 		LinkedByteOutflow outflow = new LinkedByteOutflow(1024);
-		originBranch.push(outflow);
+		NdOutbound outbound = new NdOutbound(codebase);
+		outbound.pushFrame(outflow, originBranch.getSequence());
 		
 		LinkedByteInflow inflow = new LinkedByteInflow(outflow.getHead());
+		NdInbound inbound = new NdInbound(codebase);
+		NdBranch branchClone = new NdBranch(codebase, "com.toto.123.098", "master");
+		inbound.pullFrame(inflow, delta -> {
+			try {
+				branchClone.appendDelta(delta);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 		
-		
-		NdBranch branchClone = new NdBranch(codebase, "com.toto.123.098", "master", 0x25);
-		branchClone.pull(inflow);
-		
-		branchClone.roll();
+		originBranch.compareHead(branchClone.cloneHead(), writer);
 		
 		//rBranch.print(new OutputStreamWriter(System.out));
 		
-		branchClone.deepCompare(originBranch, writer);
 		
 		terminate();
 	}

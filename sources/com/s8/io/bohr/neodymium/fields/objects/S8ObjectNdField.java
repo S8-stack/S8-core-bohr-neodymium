@@ -168,7 +168,7 @@ public class S8ObjectNdField extends NdField {
 	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
 		NdObject value = (NdObject) handler.get(origin);
 		if(value!=null) {
-			String index = value.S8_index;
+			String index = value.S8_id;
 
 			scope.appendBinding(new BuildScope.Binding() {
 
@@ -201,7 +201,7 @@ public class S8ObjectNdField extends NdField {
 			return true;
 		}
 		else {
-			return !baseValue.S8_index.equals(updateValue.S8_index);
+			return !baseValue.S8_id.equals(updateValue.S8_id);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class S8ObjectNdField extends NdField {
 	@Override
 	public S8ObjectNdFieldDelta produceDiff(NdObject object) throws NdIOException {
 		NdObject value = (NdObject) handler.get(object);
-		return new S8ObjectNdFieldDelta(this, value != null ? value.S8_index : null);
+		return new S8ObjectNdFieldDelta(this, value != null ? value.S8_id : null);
 	}
 
 
@@ -221,7 +221,7 @@ public class S8ObjectNdField extends NdField {
 			writer.write("(");
 			writer.write(value.getClass().getCanonicalName());
 			writer.write("): ");
-			writer.write(value.S8_index.toString());	
+			writer.write(value.S8_id.toString());	
 		}
 		else {
 			writer.write("null");
@@ -350,7 +350,7 @@ public class S8ObjectNdField extends NdField {
 		@Override
 		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
 			NdObject value = (NdObject) handler.get(object);
-			outflow.putStringUTF8(value != null ? value.S8_index : null);
+			outflow.putStringUTF8(value != null ? value.S8_id : null);
 		}
 		
 		@Override

@@ -3,8 +3,8 @@ package com.s8.io.bohr.neodymium.object;
 import java.io.IOException;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.branch.NdOutbound;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bytes.alpha.ByteOutflow;
@@ -24,7 +24,7 @@ public class RemoveNdObjectDelta extends NdObjectDelta {
 	}
 
 	@Override
-	public void consume(NdBranch branch, BuildScope scope) throws NdIOException {
+	public void consume(NdGraph graph, BuildScope scope) throws NdIOException {
 		
 	}
 

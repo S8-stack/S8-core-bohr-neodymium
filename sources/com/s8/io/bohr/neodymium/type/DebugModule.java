@@ -51,7 +51,7 @@ public class DebugModule {
 		writer.write(')');
 
 		// adevrtise index
-		writer.write(" index="+object.S8_index.toString());
+		writer.write(" index="+object.S8_id.toString());
 		writer.write(" {\n");
 
 		// loop through fields
@@ -103,7 +103,7 @@ public class DebugModule {
 				writer.write(')');
 
 				// adevrtise index
-				writer.write(" index="+(left.S8_index.toString()));
+				writer.write(" index="+(left.S8_id.toString()));
 				writer.write(" {");
 
 				// loop through fields

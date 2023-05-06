@@ -13,7 +13,11 @@ module com.s8.io.bohr.neodymium {
 
 	exports com.s8.io.bohr.neodymium.codebase;
 	exports com.s8.io.bohr.neodymium.type;
+	
 	exports com.s8.io.bohr.neodymium.branch;
+	exports com.s8.io.bohr.neodymium.branch.endpoint;
+	exports com.s8.io.bohr.neodymium.branch.operations;
+	
 	exports com.s8.io.bohr.neodymium.object;
 	exports com.s8.io.bohr.neodymium.handlers;
 	exports com.s8.io.bohr.neodymium.properties;

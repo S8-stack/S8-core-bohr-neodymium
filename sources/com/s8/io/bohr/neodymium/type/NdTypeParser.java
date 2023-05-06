@@ -47,7 +47,7 @@ public class NdTypeParser {
 
 
 
-	private final NdType type;
+	public final NdType type;
 
 
 	/**

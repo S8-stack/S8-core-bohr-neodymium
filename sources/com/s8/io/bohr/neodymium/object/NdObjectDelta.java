@@ -2,8 +2,8 @@ package com.s8.io.bohr.neodymium.object;
 
 import java.io.IOException;
 
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.branch.NdOutbound;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bytes.alpha.ByteOutflow;
@@ -36,7 +36,7 @@ public abstract class NdObjectDelta {
 	 * @throws NdIOException 
 	 * @throws IOException 
 	 */
-	public abstract void consume(NdBranch branch, BuildScope scope) throws NdIOException;
+	public abstract void consume(NdGraph graph, BuildScope scope) throws NdIOException;
 
 	
 	/**

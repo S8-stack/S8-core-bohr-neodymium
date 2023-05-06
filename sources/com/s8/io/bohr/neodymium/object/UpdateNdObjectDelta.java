@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
 import com.s8.io.bohr.atom.S8Exception;
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.branch.NdOutbound;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.NdType;
@@ -24,13 +24,12 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  */
 public class UpdateNdObjectDelta extends NdObjectDelta {
 
+	
+	public final NdType type;
 
-	public List<NdFieldDelta> deltas;
+	public final List<NdFieldDelta> deltas;
 	
 	
-	public NdType type;
-
-
 	/**
 	 * 
 	 * @param index
@@ -40,19 +39,22 @@ public class UpdateNdObjectDelta extends NdObjectDelta {
 	public UpdateNdObjectDelta(String index, NdType type, List<NdFieldDelta> deltas) {
 		super(index);
 		
-		this.type = type;
 
+		// type
+		this.type = type;
+		
 		// deltas
 		this.deltas = deltas;
+		
 	}
 
 
 	@Override
 	public void serialize(NdOutbound outbound, ByteOutflow outflow) throws IOException {
 
-		/* retrieve composer */
-		NdTypeComposer composer = outbound.getComposer(type.getBaseType());
-
+		
+		NdTypeComposer composer = outbound.getComposer(type.getRuntimeName());
+		
 		/*  advertise diff type: publish a create node */
 
 		/* pass flag */
@@ -74,11 +76,11 @@ public class UpdateNdObjectDelta extends NdObjectDelta {
 
 
 	@Override
-	public void consume(NdBranch branch, BuildScope scope) {
+	public void consume(NdGraph graph, BuildScope scope) {
 
 		try {
 			// retrieve vertex
-			NdVertex vertex = branch.vertices.get(index);
+			NdVertex vertex = graph.vertices.get(index);
 
 			if(vertex==null) {
 				throw new S8Exception("failed to retrieve vertex for index: "+index);
@@ -86,6 +88,9 @@ public class UpdateNdObjectDelta extends NdObjectDelta {
 
 			// retrieve object
 			NdObject object = vertex.object;
+			
+			// retrieve type
+			NdType type = vertex.type;
 
 			// consume diff
 			type.consumeDiff(object, deltas, scope);	

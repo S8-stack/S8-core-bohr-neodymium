@@ -1,11 +1,11 @@
-package com.s8.io.bohr.neodymium.branch;
+package com.s8.io.bohr.neodymium.branch.endpoint;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
+import com.s8.io.bohr.neodymium.branch.NdBranchDelta;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
@@ -22,7 +22,6 @@ import com.s8.io.bytes.alpha.ByteOutflow;
  */
 public class NdOutbound {
 
-	private final NdBranch branch;
 
 	private final NdCodebase codebase;
 
@@ -34,10 +33,9 @@ public class NdOutbound {
 	private final Map<String, NdTypeComposer> composers;
 
 
-	public NdOutbound( NdBranch branch) {
+	public NdOutbound(NdCodebase codebase) {
 		super();
-		this.branch = branch;
-		this.codebase = branch.codebase;
+		this.codebase = codebase;
 		this.composers = new HashMap<>();
 	}
 
@@ -79,14 +77,31 @@ public class NdOutbound {
 
 
 
-	public void compose(ByteOutflow outflow) throws IOException {
+	/**
+	 * 
+	 * @param outflow
+	 * @param deltas
+	 * @throws IOException
+	 */
+	private void composeSequence(ByteOutflow outflow, NdBranchDelta[] deltas) throws IOException {
 		outflow.putUInt8(BOHR_Keywords.OPEN_SEQUENCE);
-		NdBranchDelta delta;
-		Queue<NdBranchDelta> deltas = branch.deltas;
-		while((delta = deltas.poll()) != null){
+		for(NdBranchDelta delta : deltas){
 			delta.serialize(this, outflow);
 		}
 		outflow.putUInt8(BOHR_Keywords.CLOSE_SEQUENCE);
+	}
+	
+	
+
+	/**
+	 * 
+	 * @param outflow
+	 * @throws IOException
+	 */
+	public void pushFrame(ByteOutflow outflow, NdBranchDelta[] deltas) throws IOException {
+		outflow.putByteArray(BOHR_Keywords.FRAME_HEADER);
+		composeSequence(outflow, deltas);
+		outflow.putByteArray(BOHR_Keywords.FRAME_FOOTER);
 	}
 
 }

@@ -185,7 +185,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 			NdObject[] clonedArray = new NdObject[n];
 			String[] indices = new String[n];
 			for(int i=0; i<n; i++) {
-				indices[i] = value[i].S8_index;
+				indices[i] = value[i].S8_id;
 			}
 
 			handler.set(clone, clonedArray);
@@ -229,7 +229,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 			NdObject item;
 			for(int i=0; i<n; i++) {
 				item = array[i];
-				indices[i] = item != null ? item.S8_index : null;
+				indices[i] = item != null ? item.S8_id : null;
 			}
 		}
 		return new S8ObjectArrayNdFieldDelta(this, indices);
@@ -260,7 +260,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 					|| (obj1==null && obj0!=null) 
 					
 					// both non null with different indices
-					|| (obj0!=null && obj1!=null && !obj0.S8_index.equals(obj1.S8_index))) { 
+					|| (obj0!=null && obj1!=null && !obj0.S8_id.equals(obj1.S8_id))) { 
 				return false; 
 			}
 		}
@@ -436,7 +436,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				outflow.putUInt7x(length);
 				for(int i=0; i<length; i++) {
 					NdObject itemObject = array[i];
-					outflow.putStringUTF8(itemObject != null ? itemObject.S8_index : null);
+					outflow.putStringUTF8(itemObject != null ? itemObject.S8_id : null);
 				}
 			}
 			else {

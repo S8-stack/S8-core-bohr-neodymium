@@ -2,9 +2,11 @@ package com.s8.io.bohr.neodymium.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.io.bohr.neodymium.object.NdVertex;
 
 
 
@@ -39,7 +41,7 @@ public abstract class BuildScope {
 	 * @param index
 	 * @return
 	 */
-	public abstract NdObject retrieveObject(String index);
+	public abstract NdObject retrieveObject(String id);
 	
 	/**
 	 * <p><b>ALWAYS RESOLVE AFTER DESERIALIZATION</b></p>
@@ -76,6 +78,18 @@ public abstract class BuildScope {
 		 */
 		public abstract void resolve(BuildScope scope) throws NdIOException;
 
+	}
+	
+	
+	public static BuildScope fromVertices(Map<String, NdVertex> vertices) {
+		return new BuildScope() {
+
+			@Override
+			public NdObject retrieveObject(String id) {
+				return vertices.get(id).object;
+			}
+			
+		};
 	}
 	
 }

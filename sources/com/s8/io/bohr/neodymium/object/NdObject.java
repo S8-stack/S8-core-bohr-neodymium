@@ -62,7 +62,7 @@ public class NdObject {
 	 * commit time.
 	 * </p>
 	 */
-	public String S8_index = null;
+	public String S8_id = null;
 
 
 	/**

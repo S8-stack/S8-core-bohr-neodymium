@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.branch.NdOutbound;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
@@ -44,9 +44,8 @@ public class CreateNdObjectDelta extends NdObjectDelta {
 	@Override
 	public void serialize(NdOutbound outbound, ByteOutflow outflow) throws IOException {
 
-		/* retrieve composer */
-		NdTypeComposer composer = outbound.getComposer(type.getBaseType());
-
+		NdTypeComposer composer = outbound.getComposer(type.getRuntimeName());
+		
 		/*  advertise diff type: publish a create node */
 		composer.publish_CREATE_NODE(outflow, index);
 
@@ -64,7 +63,7 @@ public class CreateNdObjectDelta extends NdObjectDelta {
 
 
 	@Override
-	public void consume(NdBranch branch, BuildScope scope) throws NdIOException {
+	public void consume(NdGraph graph, BuildScope scope) throws NdIOException {
 
 		// create object
 		NdObject object = type.createNewInstance();
@@ -73,18 +72,18 @@ public class CreateNdObjectDelta extends NdObjectDelta {
 		object.S8_spin = false;
 
 		/* assign object id */
-		object.S8_index = index;
+		object.S8_id = index;
 
 		/* consume diff */
 		type.consumeDiff(object, deltas, scope);
 
 
 		/* retrieve vertex */
-		NdVertex vertex = branch.vertices.get(index);
+		NdVertex vertex = graph.vertices.get(index);
 		if(vertex == null) { 
 			/* this case happens when object creation does not come from I/O */
-			vertex = new NdVertex(branch, type);
-			branch.vertices.put(index, vertex);
+			vertex = new NdVertex(type);
+			graph.vertices.put(index, vertex);
 		}
 
 		vertex.object = object;

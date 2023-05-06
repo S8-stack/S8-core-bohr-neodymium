@@ -72,7 +72,7 @@ public abstract class CollectionNdField extends NdField {
 				writer.write("(");
 				writer.write(item.getClass().getCanonicalName());
 				writer.write("): ");
-				writer.write(item.S8_index.toString());	
+				writer.write(item.S8_id.toString());	
 			}
 			else {
 				writer.write("null");

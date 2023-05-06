@@ -1,13 +1,11 @@
 package com.s8.io.bohr.neodymium.object;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.branch.NdBranch;
-import com.s8.io.bohr.neodymium.branch.NdOutbound;
+import com.s8.io.bohr.neodymium.branch.NdGraph;
+import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bytes.alpha.ByteOutflow;
 import com.s8.io.bytes.alpha.MemoryFootprint;
@@ -23,12 +21,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  */
 public class ExposeNdObjectDelta extends NdObjectDelta {
 	
-	public List<NdFieldDelta> deltas;
-	
-
-	protected boolean isExposeUnpublished;
-	
-	protected int slot = -1;
+	public final int slot;
 
 
 	public ExposeNdObjectDelta(String index, int slot) {
@@ -51,15 +44,12 @@ public class ExposeNdObjectDelta extends NdObjectDelta {
 
 
 	@Override
-	public void consume(NdBranch branch, BuildScope scope) throws NdIOException {
+	public void consume(NdGraph graph, BuildScope scope) throws NdIOException {
 		
 		/* retrieve vertex */
-		NdVertex vertex = branch.vertices.get(index);
+		NdVertex vertex = graph.vertices.get(index);
 		
-		if(isExposeUnpublished) {
-			vertex.port = slot;
-			branch.expose(slot, vertex);
-		}
+		graph.expose(slot, vertex.object);
 	}
 	
 
@@ -67,13 +57,6 @@ public class ExposeNdObjectDelta extends NdObjectDelta {
 	public void computeFootprint(MemoryFootprint weight) {
 
 		weight.reportInstance();
-
-		// fields
-		if(deltas!=null) {
-			for(NdFieldDelta delta : deltas) {
-				delta.computeFootprint(weight);
-			}
-		}
 	}
 
 }
