@@ -3,14 +3,11 @@ package com.s8.io.bohr.neodymium.demos;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
-import com.s8.io.bohr.atom.S8BuildException;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
-import com.s8.io.bohr.neodymium.codebase.NdCodebaseBuilder;
-import com.s8.io.bohr.neodymium.codebase.NdCodebaseBuilder.UpperLevel;
 import com.s8.io.bohr.neodymium.demos.repo2.MyBuilding;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.object.NdObject;
@@ -34,7 +31,8 @@ public class NdTest02 {
 		initialize(MyBuilding.class, false);
 		
 		
-		NdBranch originBranch = new NdBranch(codebase, "com.toto.123.098", "master");
+		// "com.toto.123.098",
+		NdBranch originBranch = new NdBranch(codebase, "master");
 		
 
 		MyBuilding building = MyBuilding.create();
@@ -58,7 +56,7 @@ public class NdTest02 {
 		
 		LinkedByteInflow inflow = new LinkedByteInflow(outflow.getHead());
 		NdInbound inbound = new NdInbound(codebase);
-		NdBranch branchClone = new NdBranch(codebase, "com.toto.123.098", "master");
+		NdBranch branchClone = new NdBranch(codebase, "master");
 		inbound.pullFrame(inflow, delta -> {
 			try {
 				branchClone.appendDelta(delta);
@@ -84,16 +82,9 @@ public class NdTest02 {
 	 * @throws NdBuildException
 	 */
 	private static void initialize(Class<?> rootClass, boolean isVerbose) throws NdBuildException {
-		UpperLevel upperLevel = new UpperLevel() {
-			public @Override void pushRowType(Class<?> type) throws S8BuildException { }
-		};
-		NdCodebaseBuilder codebaseBuilder = new NdCodebaseBuilder(upperLevel, false);
-		codebaseBuilder.pushObjectType(MyBuilding.class);
-		codebase = codebaseBuilder.build();
+		codebase = NdCodebase.from(rootClass);
 		
-		if(isVerbose) {
-			codebase.DEBUG_print();	
-		}
+		if(isVerbose) { codebase.DEBUG_print();	}
 		
 		writer = new OutputStreamWriter(System.out);
 	}

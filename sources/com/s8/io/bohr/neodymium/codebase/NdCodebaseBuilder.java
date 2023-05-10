@@ -1,10 +1,8 @@
 package com.s8.io.bohr.neodymium.codebase;
 
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.S8BuildException;
 import com.s8.io.bohr.atom.annotations.S8ObjectType;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.fields.NdFieldFactory;
@@ -18,15 +16,7 @@ import com.s8.io.bohr.neodymium.type.NdTypeBuilder;
  */
 public class NdCodebaseBuilder {
 	
-	
-	public interface UpperLevel {
-		
-		public void pushRowType(Class<?> type) throws S8BuildException;
-		
-	}
 
-	
-	private final UpperLevel upperLevel;
 
 	/**
 	 * factory
@@ -54,12 +44,9 @@ public class NdCodebaseBuilder {
 	/**
 	 * 
 	 */
-	public NdCodebaseBuilder(UpperLevel upperLevel, boolean isVerbose) {
+	public NdCodebaseBuilder(boolean isVerbose) {
 		super();
 
-		
-		this.upperLevel = upperLevel;
-		
 		// init context
 		codebase = new NdCodebase(isVerbose);
 		
@@ -87,7 +74,7 @@ public class NdCodebaseBuilder {
 	
 
 
-	public void pushObjectTypes(Class<?>... types) throws NdBuildException {
+	public void pushObjectTypes(Class<?>[] types) throws NdBuildException {
 		if(isFinished) {
 			throw new NdBuildException("codebase construction process is now terminated");
 		}
@@ -133,12 +120,14 @@ public class NdCodebaseBuilder {
 			throw new NdBuildException("codebase construction process is now terminated");
 		}
 		
+		/*
 		try {
 			upperLevel.pushRowType(type);
 		} 
 		catch (IOException e) {
 			new NdBuildException(e.getMessage(), type);
 		}
+		*/
 	}
 	
 	/**

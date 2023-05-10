@@ -59,7 +59,7 @@ public class NdBranch {
 	/**
 	 * like hy.fr.com/main-ref/orc/project0273
 	 */
-	public final String address;
+	//public final String address;
 	
 	
 	/**
@@ -107,10 +107,9 @@ public class NdBranch {
 	 * @param deltas
 	 * @throws IOException 
 	 */
-	public NdBranch(NdCodebase codebase, String address, String id) {
+	public NdBranch(NdCodebase codebase, String id) {
 		super();
 		this.codebase = codebase;
-		this.address = address;
 		this.id = id;
 
 		
@@ -202,17 +201,21 @@ public class NdBranch {
 	 * @throws IOException
 	 * @throws S8ShellStructureException
 	 */
-	public void commit(NdObject[] objects) throws IOException, S8ShellStructureException {
+	public long commit(NdObject[] objects) throws IOException, S8ShellStructureException {
 		
+		
+		long version = head.version + 1;
 		
 		/* build graph from exposure */
-		NdGraph next = remapModule.remap(head.version + 1, objects);
+		NdGraph next = remapModule.remap(version, objects);
 		
 		/* commit changes */
 		NdBranchDelta delta = CommitNdModule.generateDelta(head, next);
 		
 		/* submit delta */
 		appendDelta(delta);
+		
+		return version;
 	}
 	
 	
@@ -226,6 +229,15 @@ public class NdBranch {
 	 */
 	public void compareHead(NdGraph graph, Writer writer) throws IOException, S8ShellStructureException {
 		CompareNdModule.deepCompare(head, graph, writer);
+	}
+
+
+
+
+
+
+	public long getHeadVersion() {
+		return head.version;
 	}
 
 

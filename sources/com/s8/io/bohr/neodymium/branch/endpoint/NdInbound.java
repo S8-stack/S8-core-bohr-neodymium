@@ -44,7 +44,7 @@ public class NdInbound {
 	
 	public interface DeltaConsumer {
 		
-		public void onNewDelta(NdBranchDelta delta);
+		public void onNewDelta(NdBranchDelta delta) throws IOException;
 	}
 	
 	

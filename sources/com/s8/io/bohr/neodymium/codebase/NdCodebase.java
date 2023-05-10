@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.type.NdType;
 
 /**
@@ -37,6 +38,33 @@ import com.s8.io.bohr.neodymium.type.NdType;
  *
  */
 public class NdCodebase {
+	
+	
+	
+	
+	/**
+	 * 
+	 * @param classes
+	 * @param isVerbose
+	 * @return
+	 * @throws NdBuildException
+	 */
+	public static NdCodebase from(Class<?>[] classes, boolean isVerbose) throws NdBuildException {
+		NdCodebaseBuilder codebaseBuilder = new NdCodebaseBuilder(isVerbose);
+		codebaseBuilder.pushObjectTypes(classes);
+		return codebaseBuilder.build();
+	}
+	
+	/**
+	 * 
+	 * @param classes
+	 * @return
+	 * @throws NdBuildException
+	 */
+	public static NdCodebase from(Class<?>... classes) throws NdBuildException {
+		return from(classes, false);
+	}
+	
 
 
 	
