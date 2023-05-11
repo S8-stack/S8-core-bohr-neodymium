@@ -94,7 +94,7 @@ public class DoubleNdField extends PrimitiveNdField {
 
 	@Override
 	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
-		return new Delta(handler.getDouble(object));
+		return new DoubleNdFieldDelta(this, handler.getDouble(object));
 	}
 
 
@@ -111,36 +111,7 @@ public class DoubleNdField extends PrimitiveNdField {
 
 
 
-	/* <delta> */
-
-
-	private class Delta extends NdFieldDelta {
-
-		private double value;
-
-		public Delta(double value) {
-			super();
-			this.value = value;
-		}
-
-		@Override
-		public void consume(NdObject object, BuildScope scope) throws NdIOException {
-			handler.setDouble(object, value);
-		}
-
-
-		@Override
-		public void computeFootprint(MemoryFootprint weight) {
-			weight.reportBytes(8);
-		}
-
-
-		/** field */
-		public @Override NdField getField() { return DoubleNdField.this; }
-	}
-
-	/* </delta> */
-
+	
 
 
 	/* <IO-inflow-section> */
@@ -174,7 +145,7 @@ public class DoubleNdField extends PrimitiveNdField {
 
 		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
-			return new Delta(deserialize(inflow));
+			return new DoubleNdFieldDelta(DoubleNdField.this, deserialize(inflow));
 		}
 
 		public abstract double deserialize(ByteInflow inflow) throws IOException;
@@ -229,7 +200,7 @@ public class DoubleNdField extends PrimitiveNdField {
 		
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			serialize(outflow, ((Delta) delta).value);
+			serialize(outflow, ((DoubleNdFieldDelta) delta).value);
 		}
 
 		public abstract void serialize(ByteOutflow outflow, double value) throws IOException;

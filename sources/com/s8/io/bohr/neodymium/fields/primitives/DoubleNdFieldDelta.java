@@ -21,7 +21,7 @@ public class DoubleNdFieldDelta extends NdFieldDelta {
 
 	public final DoubleNdField field;
 
-	private double value;
+	public final double value;
 
 	public DoubleNdFieldDelta(DoubleNdField field, double value) {
 		super();
