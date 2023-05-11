@@ -353,7 +353,7 @@ public class NdTypeBuilder {
 			}
 			// create new field
 			else {
-				fieldBuilder = contextBuilder.getGphFieldFactory().captureField(field);
+				fieldBuilder = contextBuilder.getFieldFactory().captureField(field);
 				NdFieldProperties props = fieldBuilder.properties;
 				switch(props.getEmbeddedTypeNature()) {
 
@@ -393,7 +393,7 @@ public class NdTypeBuilder {
 				fieldBuilder.attachGetMethod(method);
 			}
 			else { // create
-				fieldBuilder = codebaseBuilder.getGphFieldFactory().captureGetter(method);
+				fieldBuilder = codebaseBuilder.getFieldFactory().captureGetter(method);
 
 				// add fields
 				fieldBuildersByName.put(name, fieldBuilder);	
@@ -426,7 +426,7 @@ public class NdTypeBuilder {
 			}
 			else {
 
-				fieldBuilder = codebaseBuilder.getGphFieldFactory().captureSetter(method);
+				fieldBuilder = codebaseBuilder.getFieldFactory().captureSetter(method);
 				NdFieldProperties properties = fieldBuilder.properties;
 				// add fields
 				fieldBuildersByName.put(name, fieldBuilder);

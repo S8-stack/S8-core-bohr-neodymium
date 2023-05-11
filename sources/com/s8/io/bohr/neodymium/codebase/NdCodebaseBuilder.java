@@ -68,7 +68,7 @@ public class NdCodebaseBuilder {
 	 * 
 	 * @return
 	 */
-	public NdFieldFactory getGphFieldFactory() {
+	public NdFieldFactory getFieldFactory() {
 		return fieldFactory;
 	}
 	
