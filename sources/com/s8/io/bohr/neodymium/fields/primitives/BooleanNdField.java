@@ -159,15 +159,15 @@ public class BooleanNdField extends PrimitiveNdField {
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
-		case DEFAULT_FLOW_TAG: case "bool8" : return new Bool8_Outflow(code);
+		case DEFAULT_FLOW_TAG: case "bool8" : return new Bool8Composer(code);
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}	
 	}
 	
 	
-	private class Bool8_Outflow extends NdFieldComposer {
+	private class Bool8Composer extends NdFieldComposer {
 
-		public Bool8_Outflow(int code) { super(code); }
+		public Bool8Composer(int code) { super(code); }
 
 		@Override
 		public BooleanNdField getField() {

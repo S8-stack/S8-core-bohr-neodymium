@@ -122,15 +122,15 @@ public class LongNdField extends PrimitiveNdField {
 		int code = inflow.getUInt8();
 		switch(code) {
 
-		case BOHR_Types.UINT8 : return new UInt8_NdFieldInflow();
-		case BOHR_Types.UINT16 : return new UInt16_NdFieldInflow();
-		case BOHR_Types.UINT32 : return new UInt32_NdFieldInflow();
-		case BOHR_Types.UINT64 : return new UInt64_NdFieldInflow();
+		case BOHR_Types.UINT8 : return new UInt8Parser();
+		case BOHR_Types.UINT16 : return new UInt16Parser();
+		case BOHR_Types.UINT32 : return new UInt32Parser();
+		case BOHR_Types.UINT64 : return new UInt64Parser();
 
-		case BOHR_Types.INT8 : return new Int8_NdFieldInflow();
-		case BOHR_Types.INT16 : return new Int16_NdFieldInflow();
-		case BOHR_Types.INT32 : return new Int32_NdFieldInflow();
-		case BOHR_Types.INT64 : return new Int64_NdFieldInflow();
+		case BOHR_Types.INT8 : return new IntParser();
+		case BOHR_Types.INT16 : return new Int16Parser();
+		case BOHR_Types.INT32 : return new Int32Parser();
+		case BOHR_Types.INT64 : return new Int64Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -138,7 +138,7 @@ public class LongNdField extends PrimitiveNdField {
 
 
 
-	private abstract class LongNdFieldInflow extends NdFieldParser {
+	private abstract class BaseParser extends NdFieldParser {
 
 		@Override
 		public LongNdField getField() {
@@ -159,47 +159,47 @@ public class LongNdField extends PrimitiveNdField {
 
 	}
 
-	private class UInt8_NdFieldInflow extends LongNdFieldInflow {
+	private class UInt8Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getUInt8();
 		}
 	}
 
-	private class UInt16_NdFieldInflow extends LongNdFieldInflow {
+	private class UInt16Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getUInt16();
 		}
 	}
-	private class UInt32_NdFieldInflow extends LongNdFieldInflow {
+	private class UInt32Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getUInt8();
 		}
 	}
 
-	private class UInt64_NdFieldInflow extends LongNdFieldInflow {
+	private class UInt64Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getUInt16();
 		}
 	}
 
-	private class Int8_NdFieldInflow extends LongNdFieldInflow {
+	private class IntParser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getInt8();
 		}
 	}
 
-	private class Int16_NdFieldInflow extends LongNdFieldInflow {
+	private class Int16Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getInt16();
 		}
 	}
-	private class Int32_NdFieldInflow extends LongNdFieldInflow {
+	private class Int32Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getInt8();
 		}
 	}
 
-	private class Int64_NdFieldInflow extends LongNdFieldInflow {
+	private class Int64Parser extends BaseParser {
 		public @Override long deserialize(ByteInflow inflow) throws IOException {
 			return (long) inflow.getInt16();
 		}
@@ -214,23 +214,23 @@ public class LongNdField extends PrimitiveNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 
-		case "uint8" : return new UInt8_NdFieldOutflow(code);
-		case "uint16" : return new UInt16_NdFieldOutflow(code);
-		case "uint32" : return new UInt32_NdFieldOutflow(code);
-		case "uint64" : return new UInt64_NdFieldOutflow(code);
+		case "uint8" : return new UInt8Composer(code);
+		case "uint16" : return new UInt16Composer(code);
+		case "uint32" : return new UInt32Composer(code);
+		case "uint64" : return new UInt64Composer(code);
 
-		case "int8" : return new Int8_NdFieldOutflow(code);
-		case "int16" : return new Int16_NdFieldOutflow(code);
-		case "int32" : return new Int32_NdFieldOutflow(code);
-		case DEFAULT_FLOW_TAG: case "int64" : return new Int64_NdFieldOutflow(code);
+		case "int8" : return new Int8Composer(code);
+		case "int16" : return new Int16Composer(code);
+		case "int32" : return new Int32Composer(code);
+		case DEFAULT_FLOW_TAG: case "int64" : return new Int64Composer(code);
 
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private abstract class Composer extends NdFieldComposer {
-		public Composer(int code) { super(code); }
+	private abstract class BaseComposer extends NdFieldComposer {
+		public BaseComposer(int code) { super(code); }
 
 		@Override
 		public LongNdField getField() {
@@ -252,8 +252,8 @@ public class LongNdField extends PrimitiveNdField {
 	}
 
 
-	private class UInt8_NdFieldOutflow extends Composer {
-		public UInt8_NdFieldOutflow(int code) { super(code); }
+	private class UInt8Composer extends BaseComposer {
+		public UInt8Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.UINT8);
 		}
@@ -262,8 +262,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class UInt16_NdFieldOutflow extends Composer {
-		public UInt16_NdFieldOutflow(int code) { super(code); }
+	private class UInt16Composer extends BaseComposer {
+		public UInt16Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.UINT16);
 		}
@@ -272,8 +272,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class UInt32_NdFieldOutflow extends Composer {
-		public UInt32_NdFieldOutflow(int code) { super(code); }
+	private class UInt32Composer extends BaseComposer {
+		public UInt32Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.UINT32);
 		}
@@ -282,8 +282,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class UInt64_NdFieldOutflow extends Composer {
-		public UInt64_NdFieldOutflow(int code) { super(code); }
+	private class UInt64Composer extends BaseComposer {
+		public UInt64Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.UINT64);
 		}
@@ -292,8 +292,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class Int8_NdFieldOutflow extends Composer {
-		public Int8_NdFieldOutflow(int code) { super(code); }
+	private class Int8Composer extends BaseComposer {
+		public Int8Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.INT8);
 		}
@@ -302,8 +302,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class Int16_NdFieldOutflow extends Composer {
-		public Int16_NdFieldOutflow(int code) { super(code); }
+	private class Int16Composer extends BaseComposer {
+		public Int16Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.INT16);
 		}
@@ -312,8 +312,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class Int32_NdFieldOutflow extends Composer {
-		public Int32_NdFieldOutflow(int code) { super(code); }
+	private class Int32Composer extends BaseComposer {
+		public Int32Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.INT32);
 		}
@@ -322,8 +322,8 @@ public class LongNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class Int64_NdFieldOutflow extends Composer {
-		public Int64_NdFieldOutflow(int code) { super(code); }
+	private class Int64Composer extends BaseComposer {
+		public Int64Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.INT64);
 		}

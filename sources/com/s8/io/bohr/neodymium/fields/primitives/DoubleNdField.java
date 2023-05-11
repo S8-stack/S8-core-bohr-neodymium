@@ -151,8 +151,8 @@ public class DoubleNdField extends PrimitiveNdField {
 		int code = inflow.getUInt8();
 		switch(code) {
 
-		case BOHR_Types.FLOAT32 : return new Float32_Inflow();
-		case BOHR_Types.FLOAT64 : return new Float64_Inflow();
+		case BOHR_Types.FLOAT32 : return new Float32Parser();
+		case BOHR_Types.FLOAT64 : return new Float64Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -160,7 +160,7 @@ public class DoubleNdField extends PrimitiveNdField {
 
 
 
-	private abstract class Inflow extends NdFieldParser {
+	private abstract class BaseParser extends NdFieldParser {
 
 		@Override
 		public DoubleNdField getField() {
@@ -181,13 +181,13 @@ public class DoubleNdField extends PrimitiveNdField {
 
 	}
 
-	private class Float32_Inflow extends Inflow {
+	private class Float32Parser extends BaseParser {
 		public @Override double deserialize(ByteInflow inflow) throws IOException {
 			return inflow.getFloat32();
 		}
 	}
 
-	private class Float64_Inflow extends Inflow {
+	private class Float64Parser extends BaseParser {
 		public @Override double deserialize(ByteInflow inflow) throws IOException {
 			return inflow.getFloat64();
 		}
@@ -201,17 +201,17 @@ public class DoubleNdField extends PrimitiveNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 
-		case "float32" : return new Float32_Outflow(code);
-		case DEFAULT_FLOW_TAG: case "float64" : return new Float64_Outflow(code);
+		case "float32" : return new Float32Composer(code);
+		case DEFAULT_FLOW_TAG: case "float64" : return new Float64Composer(code);
 
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private abstract class Outflow extends NdFieldComposer {
+	private abstract class BaseComposer extends NdFieldComposer {
 
-		public Outflow(int code) {
+		public BaseComposer(int code) {
 			super(code);
 		}
 
@@ -236,8 +236,8 @@ public class DoubleNdField extends PrimitiveNdField {
 	}
 
 
-	private class Float32_Outflow extends Outflow {
-		public Float32_Outflow(int code) { super(code); }
+	private class Float32Composer extends BaseComposer {
+		public Float32Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.FLOAT32);
 		}
@@ -246,8 +246,8 @@ public class DoubleNdField extends PrimitiveNdField {
 		}
 	}
 
-	private class Float64_Outflow extends Outflow {
-		public Float64_Outflow(int code) { super(code); }
+	private class Float64Composer extends BaseComposer {
+		public Float64Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.FLOAT64);
 		}

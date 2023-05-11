@@ -197,13 +197,13 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 
 		switch(code = inflow.getUInt8()) {
 
-		case BOHR_Types.UINT8 : return new UInt8_Inflow();
-		case BOHR_Types.UINT16 : return new UInt16_Inflow();
-		case BOHR_Types.UINT32 : return new UInt32_Inflow();
+		case BOHR_Types.UINT8 : return new UInt8Parser();
+		case BOHR_Types.UINT16 : return new UInt16Parser();
+		case BOHR_Types.UINT32 : return new UInt32Parser();
 
-		case BOHR_Types.INT8 : return new Int8_Inflow();
-		case BOHR_Types.INT16 : return new Int16_Inflow();
-		case BOHR_Types.INT32 : return new Int32_Inflow();
+		case BOHR_Types.INT8 : return new Int8Parser();
+		case BOHR_Types.INT16 : return new Int16Parser();
+		case BOHR_Types.INT32 : return new Int32Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -211,7 +211,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 
 
 
-	private abstract class Inflow extends NdFieldParser {
+	private abstract class BaseParser extends NdFieldParser {
 
 		@Override
 		public IntegerArrayNdField getField() {
@@ -232,7 +232,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 
 	}
 
-	private class UInt8_Inflow extends Inflow {
+	private class UInt8Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -244,7 +244,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt16_Inflow extends Inflow {
+	private class UInt16Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -256,7 +256,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt32_Inflow extends Inflow {
+	private class UInt32Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -270,7 +270,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 
 
 
-	private class Int8_Inflow extends Inflow {
+	private class Int8Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -282,7 +282,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int16_Inflow extends Inflow {
+	private class Int16Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -294,7 +294,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int32_Inflow extends Inflow {
+	private class Int32Parser extends BaseParser {
 		public @Override int[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -316,12 +316,12 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 
-		case "uint8[]" : return new UInt8_Outflow(code);
-		case "uint16[]" : return new UInt16_Outflow(code);
-		case "uint32[]" : return new UInt32_Outflow(code);
+		case "uint8[]" : return new UInt8Composer(code);
+		case "uint16[]" : return new UInt16Composer(code);
+		case "uint32[]" : return new UInt32Composer(code);
 
-		case "int8[]" : return new Int8_Outflow(code);
-		case "int16[]" : return new Int16_Outflow(code);
+		case "int8[]" : return new Int8Composer(code);
+		case "int16[]" : return new Int16Composer(code);
 		case DEFAULT_FLOW_TAG: case "int32[]" : return new Int32_Outflow(code);
 
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
@@ -329,8 +329,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 	}
 
 
-	private abstract class Composer extends NdFieldComposer {
-		public Composer(int code) { super(code); }
+	private abstract class BaseComposer extends NdFieldComposer {
+		public BaseComposer(int code) { super(code); }
 
 		@Override
 		public IntegerArrayNdField getField() {
@@ -353,8 +353,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 	}
 
 
-	private class UInt8_Outflow extends Composer {
-		public UInt8_Outflow(int code) { super(code); }
+	private class UInt8Composer extends BaseComposer {
+		public UInt8Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.UINT8);
@@ -369,8 +369,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt16_Outflow extends Composer {
-		public UInt16_Outflow(int code) { super(code); }
+	private class UInt16Composer extends BaseComposer {
+		public UInt16Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.UINT16);
@@ -385,8 +385,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt32_Outflow extends Composer {
-		public UInt32_Outflow(int code) { super(code); }
+	private class UInt32Composer extends BaseComposer {
+		public UInt32Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.UINT32);
@@ -402,8 +402,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 	}
 
 
-	private class Int8_Outflow extends Composer {
-		public Int8_Outflow(int code) { super(code); }
+	private class Int8Composer extends BaseComposer {
+		public Int8Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.INT8);
@@ -418,8 +418,8 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int16_Outflow extends Composer {
-		public Int16_Outflow(int code) { super(code); }
+	private class Int16Composer extends BaseComposer {
+		public Int16Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.INT16);
@@ -434,7 +434,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int32_Outflow extends Composer {
+	private class Int32_Outflow extends BaseComposer {
 		public Int32_Outflow(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);

@@ -170,7 +170,7 @@ public class StringNdField extends PrimitiveNdField {
 		int code = inflow.getUInt8();
 		switch(code) {
 
-		case BOHR_Types.STRING_UTF8 : return new UTF8_Inflow();
+		case BOHR_Types.STRING_UTF8 : return new UTF8Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -178,7 +178,7 @@ public class StringNdField extends PrimitiveNdField {
 
 
 
-	private class UTF8_Inflow extends NdFieldParser {
+	private class UTF8Parser extends NdFieldParser {
 
 		@Override
 		public StringNdField getField() {
@@ -206,15 +206,15 @@ public class StringNdField extends PrimitiveNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 		case DEFAULT_FLOW_TAG:
-		case "StringUTF8" : return new UTF8_Outflow(code);
+		case "StringUTF8" : return new UTF8Composer(code);
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private class UTF8_Outflow extends NdFieldComposer {
+	private class UTF8Composer extends NdFieldComposer {
 
-		public UTF8_Outflow(int code) {
+		public UTF8Composer(int code) {
 			super(code);
 		}
 

@@ -238,16 +238,16 @@ public class BooleanArrayNdField extends PrimitiveArrayNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 
-		case DEFAULT_FLOW_TAG: case "bool8[]" : return new BOOL8_Outflow(code);
+		case DEFAULT_FLOW_TAG: case "bool8[]" : return new BOOL8Composer(code);
 
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private class BOOL8_Outflow extends NdFieldComposer {
+	private class BOOL8Composer extends NdFieldComposer {
 
-		public BOOL8_Outflow(int code) { super(code); }
+		public BOOL8Composer(int code) { super(code); }
 
 		@Override
 		public void publishFlowEncoding(ByteOutflow outflow) throws IOException {

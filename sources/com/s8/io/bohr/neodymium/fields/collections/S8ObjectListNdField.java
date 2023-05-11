@@ -413,7 +413,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 	@Override
 	public NdFieldParser createParser(ByteInflow inflow) throws IOException {
 		if(inflow.matches(SEQUENCE)) {
-			return new Inflow();
+			return new DefaultParser();
 		}
 		else {
 			throw new IOException("Only one possible encoding! ");
@@ -421,7 +421,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 	}
 
 
-	private class Inflow extends NdFieldParser {
+	private class DefaultParser extends NdFieldParser {
 
 
 		@Override
@@ -490,15 +490,15 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
-		case DEFAULT_FLOW_TAG: case "obj[]" : return new Composer(code);
+		case DEFAULT_FLOW_TAG: case "obj[]" : return new DefaultComposer(code);
 		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
 		}
 	}
 
 
-	private class Composer extends NdFieldComposer {
+	private class DefaultComposer extends NdFieldComposer {
 
-		public Composer(int code) {
+		public DefaultComposer(int code) {
 			super(code);
 			// TODO Auto-generated constructor stub
 		}

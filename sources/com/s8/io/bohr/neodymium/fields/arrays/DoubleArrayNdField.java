@@ -189,8 +189,8 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 
 		switch(code = inflow.getUInt8()) {
 
-		case BOHR_Types.FLOAT32 : return new Float32_Inflow();
-		case BOHR_Types.FLOAT64 : return new Float64_Inflow();
+		case BOHR_Types.FLOAT32 : return new Float32Parser();
+		case BOHR_Types.FLOAT64 : return new Float64Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -198,7 +198,7 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 
 
 
-	private abstract class Inflow extends NdFieldParser {
+	private abstract class BaseParser extends NdFieldParser {
 
 		@Override
 		public DoubleArrayNdField getField() {
@@ -219,7 +219,7 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 
 	}
 
-	private class Float32_Inflow extends Inflow {
+	private class Float32Parser extends BaseParser {
 		public @Override double[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -231,7 +231,7 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Float64_Inflow extends Inflow {
+	private class Float64Parser extends BaseParser {
 		public @Override double[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -251,17 +251,17 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 	public NdFieldComposer createComposer(int code) throws NdIOException {
 		switch(flow) {
 
-		case "float32[]" : return new Float32_Outflow(code);
-		case DEFAULT_FLOW_TAG: case "float64[]" : return new Float64_Outflow(code);
+		case "float32[]" : return new Float32Composer(code);
+		case DEFAULT_FLOW_TAG: case "float64[]" : return new Float64Composer(code);
 
 		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
 		}
 	}
 
 
-	private abstract class Composer extends NdFieldComposer {
+	private abstract class BaseComposer extends NdFieldComposer {
 
-		public Composer(int code) { super(code); }
+		public BaseComposer(int code) { super(code); }
 
 		@Override
 		public DoubleArrayNdField getField() {
@@ -283,8 +283,8 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 	}
 
 
-	private class Float32_Outflow extends Composer {
-		public Float32_Outflow(int code) { super(code); }
+	private class Float32Composer extends BaseComposer {
+		public Float32Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.FLOAT32);
@@ -299,8 +299,8 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Float64_Outflow extends Composer {
-		public Float64_Outflow(int code) { super(code); }
+	private class Float64Composer extends BaseComposer {
+		public Float64Composer(int code) { super(code); }
 		public @Override void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.ARRAY);
 			outflow.putUInt8(BOHR_Types.FLOAT64);

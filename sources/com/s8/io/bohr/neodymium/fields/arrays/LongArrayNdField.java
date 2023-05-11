@@ -189,15 +189,15 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 
 		switch(code = inflow.getUInt8()) {
 
-		case BOHR_Types.UINT8 : return new UInt8_Inflow();
-		case BOHR_Types.UINT16 : return new UInt16_Inflow();
-		case BOHR_Types.UINT32 : return new UInt32_Inflow();
-		case BOHR_Types.UINT64 : return new UInt64_Inflow();
+		case BOHR_Types.UINT8 : return new UInt8Parser();
+		case BOHR_Types.UINT16 : return new UInt16Parser();
+		case BOHR_Types.UINT32 : return new UInt32Parser();
+		case BOHR_Types.UINT64 : return new UInt64Parser();
 
-		case BOHR_Types.INT8 : return new Int8_Inflow();
-		case BOHR_Types.INT16 : return new Int16_Inflow();
-		case BOHR_Types.INT32 : return new Int32_Inflow();
-		case BOHR_Types.INT64 : return new Int64_Inflow();
+		case BOHR_Types.INT8 : return new Int8Parser();
+		case BOHR_Types.INT16 : return new Int16Parser();
+		case BOHR_Types.INT32 : return new Int32Parser();
+		case BOHR_Types.INT64 : return new Int64Parser();
 
 		default : throw new NdIOException("Failed to find field-inflow for code: "+Integer.toHexString(code));
 		}
@@ -205,7 +205,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 
 
 
-	private abstract class Inflow extends NdFieldParser {
+	private abstract class BaseParser extends NdFieldParser {
 
 		@Override
 		public LongArrayNdField getField() {
@@ -226,7 +226,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 
 	}
 
-	private class UInt8_Inflow extends Inflow {
+	private class UInt8Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -238,7 +238,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt16_Inflow extends Inflow {
+	private class UInt16Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -250,7 +250,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt32_Inflow extends Inflow {
+	private class UInt32Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -262,7 +262,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class UInt64_Inflow extends Inflow {
+	private class UInt64Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -274,7 +274,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int8_Inflow extends Inflow {
+	private class Int8Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -286,7 +286,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int16_Inflow extends Inflow {
+	private class Int16Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -298,7 +298,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int32_Inflow extends Inflow {
+	private class Int32Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
@@ -310,7 +310,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		}
 	}
 
-	private class Int64_Inflow extends Inflow {
+	private class Int64Parser extends BaseParser {
 		public @Override long[] deserialize(ByteInflow inflow) throws IOException {
 			int length = (int) inflow.getUInt7x();
 			if(length >= 0) {
