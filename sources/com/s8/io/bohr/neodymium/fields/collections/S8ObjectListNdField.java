@@ -500,7 +500,6 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 		public DefaultComposer(int code) {
 			super(code);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override
