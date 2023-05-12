@@ -76,8 +76,8 @@ public class StringNdField extends PrimitiveNdField {
 	
 	
 	@Override
-	public Delta produceDiff(NdObject object) throws NdIOException {
-		return new Delta(handler.getString(object));
+	public StringNdFieldDelta produceDiff(NdObject object) throws NdIOException {
+		return new StringNdFieldDelta(this, handler.getString(object));
 	}
 
 
@@ -127,37 +127,6 @@ public class StringNdField extends PrimitiveNdField {
 	}
 
 
-	/* <delta> */
-
-
-	public class Delta extends NdFieldDelta {
-
-		private String value;
-
-		public Delta(String value) {
-			super();
-			this.value = value;
-		}
-
-		public @Override StringNdField getField() { return StringNdField.this; }
-
-
-		@Override
-		public void consume(NdObject object, BuildScope scope) throws NdIOException {
-			handler.setString(object, value);
-		}
-
-		@Override
-		public void computeFootprint(MemoryFootprint weight) {
-			if(value!=null) {
-				weight.reportInstance();
-				weight.reportBytes(value.length());
-			}
-		}
-	}
-
-
-	/* </delta> */
 
 
 
@@ -192,7 +161,7 @@ public class StringNdField extends PrimitiveNdField {
 
 		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
-			return new Delta(inflow.getStringUTF8());
+			return new StringNdFieldDelta(StringNdField.this, inflow.getStringUTF8());
 		}
 
 
@@ -235,7 +204,7 @@ public class StringNdField extends PrimitiveNdField {
 
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			outflow.putStringUTF8(((Delta) delta).value);	
+			outflow.putStringUTF8(((StringNdFieldDelta) delta).value);	
 		}
 	}
 

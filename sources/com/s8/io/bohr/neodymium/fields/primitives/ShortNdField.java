@@ -72,8 +72,8 @@ public class ShortNdField extends PrimitiveNdField {
 	}
 
 	@Override
-	public Delta produceDiff(NdObject object) throws NdIOException {
-		return new Delta(handler.getShort(object));
+	public ShortNdFieldDelta produceDiff(NdObject object) throws NdIOException {
+		return new ShortNdFieldDelta(this, handler.getShort(object));
 	}
 
 
@@ -109,41 +109,6 @@ public class ShortNdField extends PrimitiveNdField {
 		short updateValue = handler.getShort(update);
 		return baseValue != updateValue;
 	}
-
-
-	/* <delta> */
-
-
-	/**
-	 * 
-	 * @author pierreconvert
-	 *
-	 */
-	public class Delta extends NdFieldDelta {
-
-
-		private short value;
-
-		public Delta(short value) {
-			super();
-			this.value = value;
-		}
-
-		public @Override NdField getField() { return ShortNdField.this; }
-
-		@Override
-		public void consume(NdObject object, BuildScope scope) throws NdIOException {
-			handler.setShort(object, value);
-		}
-
-		@Override
-		public void computeFootprint(MemoryFootprint weight) {
-			weight.reportBytes(2);
-		}
-
-	}
-
-	/* </delta> */
 
 
 
@@ -182,7 +147,7 @@ public class ShortNdField extends PrimitiveNdField {
 
 		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
-			return new Delta(deserialize(inflow));
+			return new ShortNdFieldDelta(ShortNdField.this, deserialize(inflow));
 		}
 
 		public abstract short deserialize(ByteInflow inflow) throws IOException;
@@ -252,7 +217,7 @@ public class ShortNdField extends PrimitiveNdField {
 		
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			serialize(outflow, ((Delta) delta).value);
+			serialize(outflow, ((ShortNdFieldDelta) delta).value);
 		}
 
 		public abstract void serialize(ByteOutflow outflow, short value) throws IOException;

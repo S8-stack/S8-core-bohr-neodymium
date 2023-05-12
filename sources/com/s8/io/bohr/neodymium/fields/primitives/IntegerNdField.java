@@ -103,7 +103,7 @@ public class IntegerNdField extends PrimitiveNdField {
 
 	@Override
 	protected void printValue(NdObject object, Writer writer) throws IOException {
-		writer.write(Long.toString(handler.getLong(object)));
+		writer.write(Integer.toString(handler.getInteger(object)));
 	}
 
 
