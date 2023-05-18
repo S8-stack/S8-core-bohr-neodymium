@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.s8.io.bohr.atom.S8ShellStructureException;
-import com.s8.io.bohr.neodymium.branch.NdBranchDelta;
+import com.s8.io.bohr.neodymium.branch.NdGraphDelta;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.ExposeNdObjectDelta;
@@ -28,11 +28,11 @@ public class CommitNdModule {
 	 * @throws S8ShellStructureException 
 	 * 
 	 */
-	public static NdBranchDelta generateDelta(NdGraph base, NdGraph graph) throws IOException, S8ShellStructureException {
+	public static NdGraphDelta generateDelta(NdGraph base, NdGraph graph) throws IOException, S8ShellStructureException {
 
 		
 		/* create new delta */
-		NdBranchDelta delta = new NdBranchDelta(base.version + 1);
+		NdGraphDelta delta = new NdGraphDelta(base.version + 1);
 
 		/* extract object deltas */
 		List<NdObjectDelta> objectDeltas = delta.objectDeltas;

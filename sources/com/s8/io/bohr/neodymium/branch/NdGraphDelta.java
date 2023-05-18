@@ -24,7 +24,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class NdBranchDelta {
+public class NdGraphDelta {
 
 
 
@@ -72,7 +72,7 @@ public class NdBranchDelta {
 	/**
 	 * 
 	 */
-	public NdBranchDelta(long version) {
+	public NdGraphDelta(long version) {
 		super();
 		this.targetVersion = version;
 	}
@@ -105,7 +105,7 @@ public class NdBranchDelta {
 	 * @param graph
 	 * @throws NdIOException
 	 */
-	public void consume(NdGraph graph) throws NdIOException {
+	public void operate(NdGraph graph) throws NdIOException {
 		/* check version */
 		if(targetVersion != (graph.version + 1)) { 
 			throw new NdIOException("Mismatch in versions");

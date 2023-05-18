@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.branch.NdBranchDelta;
+import com.s8.io.bohr.neodymium.branch.NdGraphDelta;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
@@ -42,9 +42,9 @@ import com.s8.io.bytes.alpha.ByteInflow;
  */
 public class NdInbound {
 	
-	public interface DeltaConsumer {
+	public interface GraphConsumer {
 		
-		public void onNewDelta(NdBranchDelta delta) throws IOException;
+		public void onNewDelta(NdGraphDelta delta) throws IOException;
 	}
 	
 	
@@ -88,7 +88,7 @@ public class NdInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	public void pullFrame(ByteInflow inflow, DeltaConsumer consumer) throws IOException {
+	public void pullFrame(ByteInflow inflow, GraphConsumer consumer) throws IOException {
 
 		// check opening
 		if(!inflow.matches(BOHR_Keywords.FRAME_HEADER)) { throw new IOException("DO NOT MATCH HEADER"); }
@@ -101,7 +101,7 @@ public class NdInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	private void parseSequence(ByteInflow inflow, DeltaConsumer consumer) throws IOException {
+	private void parseSequence(ByteInflow inflow, GraphConsumer consumer) throws IOException {
 
 		int code;
 
@@ -178,14 +178,14 @@ public class NdInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	private void parseBranchDelta(ByteInflow inflow, DeltaConsumer consumer) throws IOException {
+	private void parseBranchDelta(ByteInflow inflow, GraphConsumer consumer) throws IOException {
 
 
 		int code;
 
 		long version = inflow.getUInt64();
 		
-		NdBranchDelta delta = new NdBranchDelta(version);
+		NdGraphDelta delta = new NdGraphDelta(version);
 
 		while((code = inflow.getUInt8()) != CLOSE_JUMP) {
 			switch(code) {
@@ -231,17 +231,17 @@ public class NdInbound {
 
 	
 	
-	private void onDefineComment(String comment, NdBranchDelta delta) throws NdIOException {
+	private void onDefineComment(String comment, NdGraphDelta delta) throws NdIOException {
 		delta.setComment(comment);
 	}
 
 	
-	private void onDefineTimestamp(long timestamp, NdBranchDelta delta) throws NdIOException {
+	private void onDefineTimestamp(long timestamp, NdGraphDelta delta) throws NdIOException {
 		delta.setTimestamp(timestamp);
 	}
 	
 	
-	private void onCreateNode(ByteInflow inflow, NdBranchDelta delta) throws IOException {
+	private void onCreateNode(ByteInflow inflow, NdGraphDelta delta) throws IOException {
 
 		if(version < 0) { throw new NdIOException("Version is not defined"); }
 		
@@ -268,7 +268,7 @@ public class NdInbound {
 	
 
 
-	private void onUpdateNode(ByteInflow inflow, NdBranchDelta delta) throws IOException {
+	private void onUpdateNode(ByteInflow inflow, NdGraphDelta delta) throws IOException {
 
 		/* index */
 		String index = inflow.getStringUTF8();
@@ -300,7 +300,7 @@ public class NdInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	private void onExposeNode(ByteInflow inflow, NdBranchDelta delta) throws IOException {
+	private void onExposeNode(ByteInflow inflow, NdGraphDelta delta) throws IOException {
 		
 		/* index */
 		String index = inflow.getStringUTF8();
@@ -317,7 +317,7 @@ public class NdInbound {
 	 * @param inflow
 	 * @throws IOException
 	 */
-	private void onRemoveNode(ByteInflow inflow, NdBranchDelta delta) throws IOException {
+	private void onRemoveNode(ByteInflow inflow, NdGraphDelta delta) throws IOException {
 		/* index */
 		String index = inflow.getStringUTF8();
 
