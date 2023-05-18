@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.branch.NdBranchDelta;
+import com.s8.io.bohr.neodymium.branch.NdGraphDelta;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
@@ -83,9 +83,9 @@ public class NdOutbound {
 	 * @param deltas
 	 * @throws IOException
 	 */
-	private void composeSequence(ByteOutflow outflow, NdBranchDelta[] deltas) throws IOException {
+	private void composeSequence(ByteOutflow outflow, NdGraphDelta[] deltas) throws IOException {
 		outflow.putUInt8(BOHR_Keywords.OPEN_SEQUENCE);
-		for(NdBranchDelta delta : deltas){
+		for(NdGraphDelta delta : deltas){
 			delta.serialize(this, outflow);
 		}
 		outflow.putUInt8(BOHR_Keywords.CLOSE_SEQUENCE);
@@ -98,7 +98,7 @@ public class NdOutbound {
 	 * @param outflow
 	 * @throws IOException
 	 */
-	public void pushFrame(ByteOutflow outflow, NdBranchDelta[] deltas) throws IOException {
+	public void pushFrame(ByteOutflow outflow, NdGraphDelta[] deltas) throws IOException {
 		outflow.putByteArray(BOHR_Keywords.FRAME_HEADER);
 		composeSequence(outflow, deltas);
 		outflow.putByteArray(BOHR_Keywords.FRAME_FOOTER);

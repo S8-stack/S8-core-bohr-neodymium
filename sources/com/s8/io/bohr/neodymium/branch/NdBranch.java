@@ -80,7 +80,7 @@ public class NdBranch {
 	/**
 	 * 
 	 */
-	private final List<NdBranchDelta> deltas = new ArrayList<>();
+	private final List<NdGraphDelta> deltas = new ArrayList<>();
 
 
 	
@@ -134,13 +134,13 @@ public class NdBranch {
 	 * @throws  
 	 * @throws IOException 
 	 */
-	public void appendDelta(NdBranchDelta delta) throws IOException {
+	public void appendDelta(NdGraphDelta delta) throws IOException {
 		
 		// add delta
 		deltas.add(delta);
 		
 		/* run delta on head */
-		delta.consume(head);
+		delta.operate(head);
 	}
 	
 	
@@ -148,9 +148,9 @@ public class NdBranch {
 	 * 
 	 * @return
 	 */
-	public NdBranchDelta[] getSequence(){
+	public NdGraphDelta[] getSequence(){
 		int nDeltas = deltas.size();
-		NdBranchDelta[] sequence = new NdBranchDelta[nDeltas];
+		NdGraphDelta[] sequence = new NdGraphDelta[nDeltas];
 		for(int i = 0; i<nDeltas; i++) { sequence[i] = deltas.get(i); }
 		return sequence;
 	}
@@ -189,7 +189,7 @@ public class NdBranch {
 		NdGraph clone = new NdGraph();
 		int index = 0;
 		while(clone.version < version) {
-			deltas.get(index++).consume(clone);
+			deltas.get(index++).operate(clone);
 		}
 		return clone;
 	}
@@ -210,7 +210,7 @@ public class NdBranch {
 		NdGraph next = remapModule.remap(version, objects);
 		
 		/* commit changes */
-		NdBranchDelta delta = CommitNdModule.generateDelta(head, next);
+		NdGraphDelta delta = CommitNdModule.generateDelta(head, next);
 		
 		/* submit delta */
 		appendDelta(delta);
