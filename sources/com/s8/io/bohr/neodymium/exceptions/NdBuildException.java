@@ -38,7 +38,7 @@ public class NdBuildException extends Exception {
 	 * @param type
 	 */
 	public NdBuildException(String message, Class<?> type) {
-		super(message+"for type: "+type);
+		super(message+", for type: "+type);
 		this.type = type;
 	}
 

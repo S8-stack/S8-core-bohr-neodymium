@@ -298,7 +298,7 @@ public class NdTypeBuilder {
 
 			} 
 			catch (NoSuchMethodException | SecurityException e) {
-				throw new NdBuildException("missing public constructor with parameters", baseType);
+				throw new NdBuildException("missing public constructor with no parameters", baseType);
 			}
 			catch (ClassCastException e) {
 				throw new NdBuildException("Must inherit DkObject", baseType);
