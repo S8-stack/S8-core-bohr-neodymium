@@ -141,11 +141,6 @@ public class ShortNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setShort(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new ShortNdFieldDelta(ShortNdField.this, deserialize(inflow));
 		}

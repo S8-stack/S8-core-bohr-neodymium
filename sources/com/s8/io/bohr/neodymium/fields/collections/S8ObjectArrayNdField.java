@@ -294,36 +294,6 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 
-	/**
-	 * 
-	 * @author pierreconvert
-	 *
-	 * @param <T>
-	 */
-	private static class Binding implements BuildScope.Binding {
-
-		private NdObject[] array;
-
-		private String[] identifiers;
-
-
-		public Binding(NdObject[] array, String[] indices) {
-			super();
-			this.array = array;
-			this.identifiers = indices;
-		}
-
-		@Override
-		public void resolve(BuildScope scope) throws NdIOException {
-			int length = identifiers.length;
-			for(int i=0; i<length; i++) {
-				String graphId = identifiers[i];
-				array[i] = scope.retrieveObject(graphId);
-			}
-		}
-	}
-
-
 	
 
 	/* <IO-inflow-section> */
@@ -339,23 +309,6 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 	private class Inflow extends NdFieldParser {
-
-
-		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			String[] indices = deserializeIndices(inflow);
-			if(indices != null) {
-				NdObject[] array = new NdObject[indices.length];
-				/* append bindings */
-				scope.appendBinding(new Binding(array, indices));
-				// set list
-				handler.set(object, array);	
-			}
-			else {
-				// set list
-				handler.set(object, null);	
-			}
-		}
 
 
 		@Override

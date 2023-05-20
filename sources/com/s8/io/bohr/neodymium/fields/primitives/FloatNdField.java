@@ -136,11 +136,6 @@ public class FloatNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setFloat(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new FloatNdFieldDelta(FloatNdField.this, deserialize(inflow));
 		}

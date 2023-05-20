@@ -154,10 +154,6 @@ public class StringNdField extends PrimitiveNdField {
 			return StringNdField.this;
 		}
 
-		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setString(object, inflow.getStringUTF8());
-		}
 
 		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {

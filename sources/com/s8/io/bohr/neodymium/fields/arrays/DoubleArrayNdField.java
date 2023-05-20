@@ -206,11 +206,6 @@ public class DoubleArrayNdField extends PrimitiveArrayNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new DoubleArrayNdFieldDelta(DoubleArrayNdField.this, deserialize(inflow));
 		}

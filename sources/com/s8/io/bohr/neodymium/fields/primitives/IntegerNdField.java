@@ -137,11 +137,6 @@ public class IntegerNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setInteger(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new IntegerNdFieldDelta(IntegerNdField.this, deserialize(inflow));
 		}

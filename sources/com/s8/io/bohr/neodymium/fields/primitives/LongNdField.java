@@ -146,11 +146,6 @@ public class LongNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setLong(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new LongNdFieldDelta(LongNdField.this, deserialize(inflow));
 		}

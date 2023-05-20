@@ -283,11 +283,6 @@ public class S8TableNdField extends NdField {
 
 	private class Inflow extends NdFieldParser {
 
-		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
-		}
-
 		public @Override NdField getField() { return S8TableNdField.this; }
 
 		@Override

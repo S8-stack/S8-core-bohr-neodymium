@@ -423,24 +423,6 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 	private class DefaultParser extends NdFieldParser {
 
-
-		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			String[] indices = deserializeIndices(inflow);
-			if(indices != null) {
-				List<T> list = new ArrayList<T>(indices.length);
-				/* append bindings */
-				scope.appendBinding(new ListBinding<>(list, indices));
-				// set list
-				handler.set(object, list);	
-			}
-			else {
-				// set list
-				handler.set(object, null);	
-			}
-		}
-
-
 		@Override
 		public S8ObjectListNdField<T> getField() {
 			return S8ObjectListNdField.this;

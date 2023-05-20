@@ -139,11 +139,6 @@ public class DoubleNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setDouble(object, deserialize(inflow));
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new DoubleNdFieldDelta(DoubleNdField.this, deserialize(inflow));
 		}

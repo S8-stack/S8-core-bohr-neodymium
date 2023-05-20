@@ -139,11 +139,6 @@ public class BooleanNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.setBoolean(object, inflow.getBool8());
-		}
-
-		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
 			return new BooleanNdFieldDelta(BooleanNdField.this, inflow.getBool8());
 		}

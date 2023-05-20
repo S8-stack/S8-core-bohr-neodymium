@@ -257,12 +257,6 @@ public class S8SerializableNdField extends NdField {
 	private class Parser extends NdFieldParser {
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
-		}
-
-
-		@Override
 		public S8SerializableNdField getField() {
 			return S8SerializableNdField.this;
 		}

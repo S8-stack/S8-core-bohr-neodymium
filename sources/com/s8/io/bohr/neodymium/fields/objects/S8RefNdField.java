@@ -260,12 +260,6 @@ public class S8RefNdField extends NdField {
 	private class Inflow extends NdFieldParser {
 
 		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			handler.set(object, deserialize(inflow));
-		}
-
-
-		@Override
 		public S8RefNdField getField() {
 			return S8RefNdField.this;
 		}

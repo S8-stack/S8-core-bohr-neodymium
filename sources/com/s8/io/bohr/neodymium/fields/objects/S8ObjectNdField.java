@@ -248,30 +248,6 @@ public class S8ObjectNdField extends NdField {
 
 
 
-	/**
-	 * 
-	 * @author pierreconvert
-	 *
-	 * @param <T>
-	 */
-	private class ObjectBinding implements BuildScope.Binding {
-
-		private Object object;
-
-		private String id;
-
-		public ObjectBinding(Object object, String id) {
-			super();
-			this.object = object;
-			this.id = id;
-		}
-
-		@Override
-		public void resolve(BuildScope scope) throws NdIOException {
-			handler.set(object, scope.retrieveObject(id));
-		}
-	}
-
 	/* <delta> */
 
 
@@ -289,20 +265,6 @@ public class S8ObjectNdField extends NdField {
 
 
 	private class Inflow extends NdFieldParser {
-
-		@Override
-		public void parseValue(NdObject object, ByteInflow inflow, BuildScope scope) throws IOException {
-			String id = inflow.getStringUTF8();
-			if(id != null) {
-				/* append bindings */
-				scope.appendBinding(new ObjectBinding(object, id));
-			}
-			else {
-				// set list
-				handler.set(object, null);	
-			}
-		}
-
 
 		@Override
 		public S8ObjectNdField getField() {
