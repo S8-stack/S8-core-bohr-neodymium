@@ -5,8 +5,8 @@ import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8Getter;
 import com.s8.io.bohr.atom.annotations.S8Setter;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
-import com.s8.io.bohr.neodymium.fields.EmbeddedTypeNature;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 
 
 /**
@@ -17,16 +17,13 @@ import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public abstract class NdFieldProperties {
+public class NdFieldProperties {
 
 	
 	
 	private NdFieldPrototype prototype;
 
-
-	public final static int FIELD = 0x02, METHODS = 0x04;
-
-	private final int mode; 
+	public final NdHandlerType handlerType;
 
 	/**
 	 * 
@@ -45,49 +42,64 @@ public abstract class NdFieldProperties {
 	/**
 	 * 
 	 */
-	private String flow;
-
-
-	private boolean isMaskDefined = false;
-
-
-	/**
-	 * 
-	 */
-	private long mask;
-
-
-	private boolean isFlagsDefined = false;
-
-	/**
-	 * 
-	 */
-	private long flags;
+	private String exportFormat;
 
 
 
-	public abstract EmbeddedTypeNature getEmbeddedTypeNature();
 	
+	/**
+	 * Type of object in array, or in list, or key of map
+	 * @return
+	 */
+	public final Class<?>[] embeddedTypes;
+
 	
 
-	public abstract Class<?> getEmbeddedType();
-
-	public abstract Class<?> getBaseType();
-
-	public abstract Class<?> getParameterType1();
-
-	public abstract Class<?> getParameterType2();
-
-
+	
 
 	/**
 	 * 
 	 * @param mode
 	 */
-	public NdFieldProperties(NdFieldPrototype prototype, int mode) {
+	public NdFieldProperties(NdFieldPrototype prototype,
+			NdHandlerType handlerType,
+			Class<?> baseType) {
 		super();
 		this.prototype = prototype;
-		this.mode = mode;
+		this.handlerType = handlerType;
+		
+		this.embeddedTypes = new Class<?>[] { baseType };
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @param mode
+	 */
+	public NdFieldProperties(NdFieldPrototype prototype,
+			NdHandlerType handlerType,
+			Class<?> baseType,
+			Class<?> componentType) {
+		super();
+		this.prototype = prototype;
+		this.handlerType = handlerType;
+		
+		this.embeddedTypes = new Class<?>[] { baseType, componentType };
+	}
+	
+	/**
+	 * 
+	 * @param mode
+	 */
+	public NdFieldProperties(NdFieldPrototype prototype,
+			NdHandlerType handlerType,
+			Class<?> baseType,
+			Class<?>[] embeddedTypes) {
+		super();
+		this.prototype = prototype;
+		this.handlerType = handlerType;
+		this.embeddedTypes = embeddedTypes;
 	}
 
 
@@ -102,14 +114,6 @@ public abstract class NdFieldProperties {
 	}
 
 
-	/**
-	 * 
-	 * @return
-	 */
-	public int getMode() {
-		return mode;
-	}
-
 
 	public String getName() {
 		return name;
@@ -123,41 +127,15 @@ public abstract class NdFieldProperties {
 
 
 
-	public String getFlow() {
-		return flow;
+	public String getExportFormat() {
+		return exportFormat;
 	}
 
 
-	public void setFlow(String flow) {
-		this.flow = flow;
+	public void setExportFormat(String format) {
+		this.exportFormat = format;
 		this.isFlowDefined = true;
 	}
-
-
-
-	public long getMask() {
-		return mask;
-	}
-
-
-	public void setMask(long mask) {
-		this.mask = mask;
-		this.isMaskDefined = true;
-	}
-
-
-
-	public long getFlags() {
-		return flags;
-	}
-
-
-	public void setFlags(long flags) {
-		this.flags = flags;
-		this.isFlagsDefined = true;
-	}
-
-
 
 
 	/**
@@ -167,22 +145,26 @@ public abstract class NdFieldProperties {
 	 */
 	public void merge(NdFieldProperties right) throws NdBuildException {
 		
-		if(mode != right.mode) {
-			throw new NdBuildException("Cannot mix FIELD and GETTER_SETTER_PARI approach");
+		if(handlerType != right.handlerType) {
+			throw new NdBuildException("Cannot mix FIELD and GETTER_SETTER_PAIR approach");
 		}
 		
-		if(!getBaseType().equals(right.getBaseType())) {
-			throw new NdBuildException("Base type discrepancy: "+getBaseType()+" <-> "+right.getBaseType());
+		
+		/* compare parameter 1, if any */
+		int nTypes = embeddedTypes.length;
+		if(right.embeddedTypes.length != nTypes) {
+			throw new NdBuildException("<T1> type discrepancy: nb of param Types");
+		}
+		for(int i = 0; i < nTypes; i++) {
+			Class<?> leftParam = embeddedTypes[i];
+			Class<?> rightParam = right.embeddedTypes[i];
+			if((leftParam !=null && rightParam != null && !leftParam.equals(rightParam)) ||
+					(leftParam != null && rightParam == null) || 
+					(leftParam == null && rightParam != null)) {
+				throw new NdBuildException("<T1> type discrepancy: "+leftParam+" <-> "+rightParam);
+			}	
 		}
 		
-		if(!getParameterType1().equals(right.getParameterType1())) {
-			throw new NdBuildException("<T1> type discrepancy: "+getParameterType1()+" <-> "+right.getParameterType1());
-		}
-		
-		if(!getParameterType2().equals(right.getParameterType2())) {
-			throw new NdBuildException("<T2> type discrepancy: "+getParameterType2()+" <-> "+right.getParameterType2());
-		}
-	
 
 		// name
 		if(!isNameDefined && right.isNameDefined) {
@@ -194,26 +176,10 @@ public abstract class NdFieldProperties {
 
 		// flow
 		if(!isFlowDefined && right.isFlowDefined) {
-			setFlow(right.name);
+			setExportFormat(right.name);
 		}
-		else if(isFlowDefined && right.isFlowDefined && !flow.equals(right.flow)) {
-			throw new NdBuildException("<flow> discrepancy: "+flow+" <-> "+right.flow);
-		}
-
-		// mask
-		if(!isMaskDefined && right.isMaskDefined) {
-			setMask(right.mask);
-		}
-		else if(isMaskDefined && right.isMaskDefined && (mask != right.mask)) {
-			throw new NdBuildException("<mask> discrepancy: "+mask+" <-> "+right.mask);
-		}
-
-		// flags
-		if(!isFlagsDefined && right.isFlagsDefined) {
-			setFlags(right.flags);
-		}
-		else if(isFlagsDefined && right.isFlagsDefined && (flags != right.flags)) {
-			throw new NdBuildException("<flags> discrepancy: "+flags+" <-> "+right.flags);
+		else if(isFlowDefined && right.isFlowDefined && !exportFormat.equals(right.exportFormat)) {
+			throw new NdBuildException("<export-format> discrepancy: "+exportFormat+" <-> "+right.exportFormat);
 		}
 	}
 
@@ -229,9 +195,7 @@ public abstract class NdFieldProperties {
 	 */
 	public void setFieldAnnotation(S8Field annotation) {
 		setName(annotation.name());
-		setFlow(annotation.flow());
-		setMask(annotation.mask());
-		setFlags(annotation.props());
+		setExportFormat(annotation.export());
 	}
 
 
@@ -243,9 +207,7 @@ public abstract class NdFieldProperties {
 	 */
 	public void setGetterAnnotation(S8Getter annotation) {
 		setName(annotation.name());
-		setFlow(annotation.flow());
-		setMask(annotation.mask());
-		setFlags(annotation.flags());
+		setExportFormat(annotation.export());
 	}
 
 	/**
@@ -256,6 +218,12 @@ public abstract class NdFieldProperties {
 	 */
 	public void setSetterAnnotation(S8Setter annotation) {
 		setName(annotation.name());
+	}
+
+
+
+	public Class<?> getBaseType() {
+		return embeddedTypes[0];
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.s8.io.bohr.neodymium.fields.collections;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Queue;
@@ -17,9 +18,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties1T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -49,7 +50,8 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
 					if(NdObject.class.isAssignableFrom(componentType)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, componentType);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, 
+								componentType);
 						properties.setFieldAnnotation(annotation);
 						return properties;
 					}
@@ -72,7 +74,8 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
 					if(NdObject.class.isAssignableFrom(componentType)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, componentType);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
+								Array.class, componentType);
 						properties.setSetterAnnotation(annotation);
 						return properties;
 					}
@@ -95,7 +98,8 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
 					if(NdObject.class.isAssignableFrom(componentType)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, componentType);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
+								Array.class, componentType);
 						properties.setGetterAnnotation(annotation);
 						return properties;
 					}
@@ -136,9 +140,23 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 	}
 
 
+	
+	public final Class<?> componentType;
 
+	
+	/**
+	 * 
+	 * @param ordinal
+	 * @param properties
+	 * @param handler
+	 * @throws NdBuildException
+	 */
 	public S8ObjectArrayNdField(int ordinal, NdFieldProperties properties, NdHandler handler) throws NdBuildException {
 		super(ordinal, properties, handler);
+		this.componentType = properties.embeddedTypes[0];
+		if(componentType == null) {
+			throw new NdBuildException("Undefined component type");
+		}
 	}
 
 
@@ -178,30 +196,29 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 	@Override
 	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
-		NdObject[] value = (NdObject[]) handler.get(origin);
-		if(value!=null) {
-			int n = value.length;
-
-			NdObject[] clonedArray = new NdObject[n];
-			String[] indices = new String[n];
+		NdObject[] objects = (NdObject[]) handler.get(origin);
+		if(objects!=null) {
+			
+			int n = objects.length;
+			String[] itemIdentifers = new String[n];
 			for(int i=0; i<n; i++) {
-				indices[i] = value[i].S8_id;
+				NdObject object = objects[i];
+				itemIdentifers[i] = object != null ? object.S8_id : null;
 			}
-
-			handler.set(clone, clonedArray);
-
+			
+			
 			scope.appendBinding(new BuildScope.Binding() {
 
 				@Override
 				public void resolve(BuildScope scope) throws NdIOException {
-					for(int i=0; i<n; i++) {
-						// no need to upcast to S8Object
-						NdObject indexedObject = scope.retrieveObject(indices[i]);
-						if(indexedObject==null) {
-							throw new NdIOException("Fialed to retriev vertex");
-						}
-						clonedArray[i] = indexedObject;
+ 					Object clonedArray = Array.newInstance(componentType, n);
+					for(int index = 0; index < n; index++) {
+						String id = itemIdentifers[index];
+						NdObject indexedObject = (id != null) ? scope.retrieveObject(id) : null;
+						Array.set(clonedArray, index, indexedObject);
 					}
+					
+					handler.set(clone, clonedArray);
 				}
 			});	
 		}
@@ -356,9 +373,9 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 	/* <IO-outflow-section> */
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 		case DEFAULT_FLOW_TAG: case "obj[]" : return new Composer(code);
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 
@@ -401,7 +418,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			serialize(outflow, ((S8ObjectArrayNdFieldDelta) delta).indices);
+			serialize(outflow, ((S8ObjectArrayNdFieldDelta) delta).itemIdentifiers);
 		}
 
 

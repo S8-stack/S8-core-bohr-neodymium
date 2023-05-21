@@ -334,7 +334,7 @@ public class NdTypeBuilder {
 	 * @throws LthSerialException 
 	 * @throws BkException
 	 */
-	private void onField(NdCodebaseBuilder contextBuilder, Field field) throws NdBuildException {
+	private void onField(NdCodebaseBuilder codebaseBuilder, Field field) throws NdBuildException {
 
 		S8Field fieldAnnotation = field.getAnnotation(S8Field.class);
 		if(fieldAnnotation!=null) {
@@ -353,20 +353,10 @@ public class NdTypeBuilder {
 			}
 			// create new field
 			else {
-				fieldBuilder = contextBuilder.getFieldFactory().captureField(field);
+				fieldBuilder = codebaseBuilder.getFieldFactory().captureField(field);
 				NdFieldProperties props = fieldBuilder.properties;
-				switch(props.getEmbeddedTypeNature()) {
-
-				case S8_OBJECT : 
-					contextBuilder.pushObjectType(props.getEmbeddedType());
-					break;
-
-				case S8_ROW:
-					contextBuilder.pushRowType(props.getEmbeddedType());
-					break;
-
-				default: break; // do nothing
-				}
+				for(Class<?> embeddedType : props.embeddedTypes) { codebaseBuilder.pushObjectType(embeddedType);	}
+				
 
 				// apply filter before appending fields
 				filter(field);
@@ -399,19 +389,9 @@ public class NdTypeBuilder {
 				fieldBuildersByName.put(name, fieldBuilder);	
 
 				// further crawl...
-				NdFieldProperties properties = fieldBuilder.properties;
-
-				switch(properties.getEmbeddedTypeNature()) {
-				case S8_OBJECT : 
-					codebaseBuilder.pushObjectType(properties.getEmbeddedType());
-					break;
-
-				case S8_ROW:
-					codebaseBuilder.pushRowType(properties.getEmbeddedType());
-					break;
-
-				default: break; // do nothing
-				}
+				NdFieldProperties props = fieldBuilder.properties;
+				for(Class<?> embeddedType : props.embeddedTypes) { codebaseBuilder.pushObjectType(embeddedType);	}
+				
 			}
 			hasBeenCaptured = true;
 		}
@@ -427,21 +407,11 @@ public class NdTypeBuilder {
 			else {
 
 				fieldBuilder = codebaseBuilder.getFieldFactory().captureSetter(method);
-				NdFieldProperties properties = fieldBuilder.properties;
+				NdFieldProperties props = fieldBuilder.properties;
 				// add fields
 				fieldBuildersByName.put(name, fieldBuilder);
-
-				switch(properties.getEmbeddedTypeNature()) {
-				case S8_OBJECT : 
-					codebaseBuilder.pushObjectType(properties.getEmbeddedType());
-					break;
-
-				case S8_ROW:
-					codebaseBuilder.pushRowType(properties.getEmbeddedType());
-					break;
-
-				default: break; // do nothing
-				}
+				for(Class<?> embeddedType : props.embeddedTypes) { codebaseBuilder.pushObjectType(embeddedType);	}
+				
 
 			}
 		}

@@ -22,9 +22,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties1T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -56,11 +56,11 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
 					Type parameterType = field.getGenericType();
-					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
-					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+					Class<?> typeArgument =  getParameterTypeClass(parameterType);
 
 					if(NdObject.class.isAssignableFrom(typeArgument)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, typeArgument);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, 
+								typeArgument);
 						properties.setFieldAnnotation(annotation);
 						return properties;
 					}
@@ -83,11 +83,11 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 				S8Setter annotation = method.getAnnotation(S8Setter.class);
 				if(annotation != null) {
 					Type parameterType = method.getGenericParameterTypes()[0];
-					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
-					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+					Class<?> typeArgument = getParameterTypeClass(parameterType);
 
 					if(NdObject.class.isAssignableFrom(typeArgument)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, typeArgument);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
+								typeArgument);
 						properties.setSetterAnnotation(annotation);
 						return properties;
 					}
@@ -108,11 +108,11 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 				S8Getter annotation = method.getAnnotation(S8Getter.class);
 				if(annotation != null) {
 					Type parameterType = method.getGenericReturnType();
-					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
-					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+					Class<?> typeArgument = getParameterTypeClass(parameterType);
 
 					if(NdObject.class.isAssignableFrom(typeArgument)) {
-						NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, typeArgument);
+						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR,
+								typeArgument);
 						properties.setGetterAnnotation(annotation);
 						return properties;
 					}
@@ -130,6 +130,22 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 		@Override
 		public NdFieldBuilder createFieldBuilder(NdFieldProperties properties, NdHandler handler) {
 			return new Builder<>(properties, handler);
+		}
+
+
+
+		private Class<?> getParameterTypeClass(Type parameterType) throws NdBuildException {
+			ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
+			Type typeArgument = parameterizedType.getActualTypeArguments()[0];
+			if(typeArgument instanceof Class<?>) {
+				return (Class<?>) typeArgument;	
+			}
+			else if(typeArgument instanceof ParameterizedType){
+				return (Class<?>) ((ParameterizedType) typeArgument).getRawType();
+			}
+			else {
+				throw new NdBuildException("Cannot handle type: "+parameterizedType);
+			}
 		}
 	};
 
@@ -164,7 +180,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 	public S8ObjectListNdField(int ordinal, NdFieldProperties properties, NdHandler handler) throws NdBuildException {
 		super(ordinal, properties, handler);
-		baseType = properties.getEmbeddedType();
+		baseType = properties.embeddedTypes[0];
 	}
 
 
@@ -178,36 +194,34 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 		private List<T> list;
 
-		private String[] identifiers;
+		private String[] itemIdentifiers;
 
 
-		public ListBinding(List<T> list, String[] indices) {
+		public ListBinding(List<T> list, String[] ids) {
 			super();
 			this.list = list;
-			this.identifiers = indices;
+			this.itemIdentifiers = ids;
 		}
 
 		@SuppressWarnings("unchecked")
 		@Override
 		public void resolve(BuildScope scope) throws NdIOException {
-			int length = identifiers.length;
-			for(int i=0; i<length; i++) {
-				String graphId = identifiers[i];
-
-				if(graphId != null) {
+			int length = itemIdentifiers.length;
+			for(int index = 0; index < length; index++) {
+				String id = itemIdentifiers[index];
+				if(id != null) {
 					// might be null
-					NdObject struct = scope.retrieveObject(graphId);
+					NdObject struct = scope.retrieveObject(id);
 					if(struct!=null) {
 						list.add((T) struct);		
 					}
 					else {
-						throw new NdIOException("Failed to retrive object for index="+graphId);
+						throw new NdIOException("Failed to retrive object for index="+id);
 					}	
 				}
 				else {
 					list.add(null);		
 				}
-
 			}
 		}
 	}
@@ -471,9 +485,9 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 		case DEFAULT_FLOW_TAG: case "obj[]" : return new DefaultComposer(code);
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 
@@ -515,10 +529,10 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 			}
 		}
 
-		
+
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			serialize(outflow, ((S8ObjectListNdFieldDelta<?>) delta).indices);
+			serialize(outflow, ((S8ObjectListNdFieldDelta<?>) delta).itemIdentifiers);
 		}
 
 		public void serialize(ByteOutflow outflow, String[] indices) throws IOException {

@@ -11,9 +11,9 @@ import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldBuilder;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties0T;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 
 /**
@@ -52,7 +52,8 @@ public abstract class PrimitiveNdField extends NdField {
 				if(annotation != null) {
 					
 					// types
-					NdFieldProperties props = new NdFieldProperties0T(this, NdFieldProperties.FIELD, fieldType);
+					NdFieldProperties props = new NdFieldProperties(this, 
+							NdHandlerType.FIELD, fieldType);
 					props.setFieldAnnotation(annotation);
 					return props;
 				}
@@ -75,7 +76,9 @@ public abstract class PrimitiveNdField extends NdField {
 				if(annotation != null) {
 					
 					// types
-					NdFieldProperties props = new NdFieldProperties0T(this, NdFieldProperties.METHODS, fieldType);
+					NdFieldProperties props = new NdFieldProperties(this, 
+							NdHandlerType.GETTER_SETTER_PAIR, 
+							fieldType);
 					props.setSetterAnnotation(annotation);
 					return props;
 				}
@@ -96,7 +99,9 @@ public abstract class PrimitiveNdField extends NdField {
 				if(annotation != null) {
 					
 					// types
-					NdFieldProperties props = new NdFieldProperties0T(this, NdFieldProperties.METHODS, fieldType);
+					NdFieldProperties props = new NdFieldProperties(this, 
+							NdHandlerType.GETTER_SETTER_PAIR, 
+							fieldType);
 					props.setGetterAnnotation(annotation);
 					return props;
 				}

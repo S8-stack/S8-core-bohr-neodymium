@@ -115,6 +115,7 @@ public class NdGraphDelta {
 		for(NdObjectDelta objectDelta : objectDeltas) { 
 			objectDelta.consume(graph, scope); 
 		}
+		scope.resolve();
 		
 		/* increment version of graph */
 		graph.version++;

@@ -19,7 +19,7 @@ public class MyProduct extends NdObject {
 	public String description;
 	
 	
-	@S8Field(name = "stock", props = REF)
+	@S8Field(name = "stock")
 	public MyItemStock stock;
 	
 

@@ -86,9 +86,12 @@ public abstract class BuildScope {
 
 			@Override
 			public NdObject retrieveObject(String id) {
-				return vertices.get(id).object;
+				NdVertex vertex = vertices.get(id);
+				if(vertex == null) {
+					throw new RuntimeException("Cannot find vertex");
+				}
+				return vertex.object;
 			}
-			
 		};
 	}
 	

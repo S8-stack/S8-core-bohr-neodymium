@@ -21,10 +21,10 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdRef;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties1T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -56,7 +56,7 @@ public class S8RefNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, typeArgument);
 					properties.setFieldAnnotation(annotation);
 					return properties;	
 				}
@@ -77,7 +77,7 @@ public class S8RefNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, typeArgument);
 					properties.setSetterAnnotation(annotation);
 					return properties;
 				}
@@ -102,7 +102,7 @@ public class S8RefNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, typeArgument);
 					properties.setGetterAnnotation(annotation);
 					return properties;
 				}
@@ -290,11 +290,11 @@ public class S8RefNdField extends NdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "obj[]" : return new Outflow(code);
 
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 

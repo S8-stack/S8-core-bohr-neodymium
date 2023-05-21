@@ -207,7 +207,7 @@ public class LongNdField extends PrimitiveNdField {
 	/* <IO-outflow-section> */
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "uint8" : return new UInt8Composer(code);
 		case "uint16" : return new UInt16Composer(code);
@@ -219,7 +219,7 @@ public class LongNdField extends PrimitiveNdField {
 		case "int32" : return new Int32Composer(code);
 		case DEFAULT_FLOW_TAG: case "int64" : return new Int64Composer(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

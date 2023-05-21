@@ -15,7 +15,6 @@ import com.s8.io.bohr.atom.annotations.S8Getter;
 import com.s8.io.bohr.atom.annotations.S8Setter;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.fields.EmbeddedTypeNature;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldBuilder;
 import com.s8.io.bohr.neodymium.fields.NdFieldComposer;
@@ -23,6 +22,7 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
@@ -42,36 +42,6 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  */
 public class S8TableNdField extends NdField {
 
-	private static class Props extends NdFieldProperties {
-
-		private Class<?> embeddedType;
-
-		public Props(NdFieldPrototype prototype, int mode, Class<?> embeddedType) {
-			super(prototype, mode);
-			this.embeddedType = embeddedType;
-		}
-
-
-		public @Override EmbeddedTypeNature getEmbeddedTypeNature() { return EmbeddedTypeNature.S8_ROW; }
-		public @Override Class<?> getEmbeddedType() { return embeddedType; }
-
-		@Override
-		public Class<?> getBaseType() {
-			return embeddedType;
-		}
-
-		@Override
-		public Class<?> getParameterType1() {
-			return null;
-		}
-
-		@Override
-		public Class<?> getParameterType2() {
-			return null;
-		}
-
-	}
-
 
 	public final static NdFieldPrototype PROTOTYPE = new NdFieldPrototype() {
 
@@ -87,7 +57,8 @@ public class S8TableNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new Props(this, NdFieldProperties.FIELD, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, 
+							NdHandlerType.FIELD, typeArgument);
 					properties.setFieldAnnotation(annotation);
 					return properties;	
 				}
@@ -108,7 +79,8 @@ public class S8TableNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new Props(this, NdFieldProperties.METHODS, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, 
+							NdHandlerType.GETTER_SETTER_PAIR, typeArgument);
 					properties.setSetterAnnotation(annotation);
 					return properties;
 				}
@@ -133,7 +105,8 @@ public class S8TableNdField extends NdField {
 					ParameterizedType parameterizedType = (ParameterizedType) parameterType; 
 					Class<?> typeArgument = (Class<?>) parameterizedType.getActualTypeArguments()[0];
 
-					NdFieldProperties properties = new Props(this, NdFieldProperties.METHODS, typeArgument);
+					NdFieldProperties properties = new NdFieldProperties(this, 
+							NdHandlerType.GETTER_SETTER_PAIR, typeArgument);
 					properties.setGetterAnnotation(annotation);
 					return properties;
 				}
@@ -303,11 +276,11 @@ public class S8TableNdField extends NdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "table" : return new Outflow(code);
 
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 

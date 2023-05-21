@@ -169,10 +169,10 @@ public class StringNdField extends PrimitiveNdField {
 	/* <IO-outflow-section> */
 
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 		case DEFAULT_FLOW_TAG:
 		case "StringUTF8" : return new UTF8Composer(code);
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

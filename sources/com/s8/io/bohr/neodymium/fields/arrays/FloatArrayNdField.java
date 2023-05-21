@@ -255,12 +255,12 @@ public class FloatArrayNdField extends PrimitiveArrayNdField {
 
 
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case DEFAULT_FLOW_TAG: case "float32[]" : return new Float32_Outflow(code);
 		case "float64[]" : return new Float64_Outflow(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

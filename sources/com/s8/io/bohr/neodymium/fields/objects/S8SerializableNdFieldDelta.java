@@ -1,6 +1,6 @@
 package com.s8.io.bohr.neodymium.fields.objects;
 
-import com.s8.io.bohr.atom.BohrSerializable;
+import com.s8.io.bohr.atom.serial.BohrSerializable;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
@@ -16,16 +16,16 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class S8SerializableNdFieldDelta extends NdFieldDelta {
+public class S8SerializableNdFieldDelta<T extends BohrSerializable> extends NdFieldDelta {
 	
 	
-	public final S8SerializableNdField field;
+	public final S8SerializableNdField<T> field;
 	
 	public final BohrSerializable value;
 
 	
 	
-	public S8SerializableNdFieldDelta(S8SerializableNdField field, BohrSerializable value) {
+	public S8SerializableNdFieldDelta(S8SerializableNdField<T> field, BohrSerializable value) {
 		super();
 		this.field = field;
 		this.value = value;

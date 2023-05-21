@@ -19,9 +19,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties1T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -49,7 +49,7 @@ public class S8ObjectNdField extends NdField {
 			if(NdObject.class.isAssignableFrom(fieldType)){
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.FIELD, fieldType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, fieldType);
 					properties.setFieldAnnotation(annotation);
 					return properties;	
 				}
@@ -65,7 +65,7 @@ public class S8ObjectNdField extends NdField {
 			S8Setter annotation = method.getAnnotation(S8Setter.class);
 			if(annotation != null) {
 				if(NdObject.class.isAssignableFrom(baseType)) {
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setSetterAnnotation(annotation);
 					return properties;
 				}
@@ -84,7 +84,7 @@ public class S8ObjectNdField extends NdField {
 			S8Getter annotation = method.getAnnotation(S8Getter.class);
 			if(annotation != null) {
 				if(NdObject.class.isAssignableFrom(baseType)){
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setGetterAnnotation(annotation);
 					return properties;
 				}
@@ -169,6 +169,10 @@ public class S8ObjectNdField extends NdField {
 		NdObject value = (NdObject) handler.get(origin);
 		if(value!=null) {
 			String index = value.S8_id;
+			
+			if(index == null) {
+				throw new NdIOException("This object has no id: "+index+" -> "+value.getClass()+" in "+origin.getClass());
+			}
 
 			scope.appendBinding(new BuildScope.Binding() {
 
@@ -286,9 +290,9 @@ public class S8ObjectNdField extends NdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 		case DEFAULT_FLOW_TAG: case "obj[]" : return new Outflow(code);
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 

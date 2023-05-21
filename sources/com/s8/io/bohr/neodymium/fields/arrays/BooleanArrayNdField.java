@@ -232,11 +232,11 @@ public class BooleanArrayNdField extends PrimitiveArrayNdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case DEFAULT_FLOW_TAG: case "bool8[]" : return new BOOL8Composer(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

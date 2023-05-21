@@ -65,6 +65,10 @@ public class NdCodebase {
 		return from(classes, false);
 	}
 	
+	public static NdCodebase from_DEBUG(Class<?>... classes) throws NdBuildException {
+		return from(classes, true);
+	}
+	
 
 
 	

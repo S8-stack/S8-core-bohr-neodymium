@@ -23,7 +23,7 @@ public class S8ObjectArrayNdFieldDelta extends NdFieldDelta {
 	
 	public final S8ObjectArrayNdField field;
 	
-	public final String[] indices;
+	public final String[] itemIdentifiers;
 
 	/**
 	 * 
@@ -33,7 +33,7 @@ public class S8ObjectArrayNdFieldDelta extends NdFieldDelta {
 	public S8ObjectArrayNdFieldDelta(S8ObjectArrayNdField field, String[] indices) {
 		super();
 		this.field = field;
-		this.indices = indices;
+		this.itemIdentifiers = indices;
 	}
 	
 
@@ -46,21 +46,21 @@ public class S8ObjectArrayNdFieldDelta extends NdFieldDelta {
 	@Override
 	public void consume(NdObject object, BuildScope scope) throws NdIOException {
 
-		if(indices!=null) {
-			int n = indices.length;
-			NdObject[] array = new NdObject[n];
-
-
+		if(itemIdentifiers!=null) {
+			
 			scope.appendBinding(new BuildScope.Binding() {
 				@Override
 				public void resolve(BuildScope scope) throws NdIOException {
-					for(int i=0; i<n; i++) {
-						int index = i;
-						Array.set(array, index, scope.retrieveObject(indices[i]));
+					int n = itemIdentifiers.length;
+					Object array = Array.newInstance(field.componentType, n);
+					for(int index = 0; index < n; index++) {
+						String id = itemIdentifiers[index];
+						Array.set(array, index, id != null ? scope.retrieveObject(id) : null);
 					}
+					field.handler.set(object, array);
 				}
 			});	
-			field.handler.set(object, array);
+			
 		}
 		else {
 			field.handler.set(object, null);
@@ -70,9 +70,9 @@ public class S8ObjectArrayNdFieldDelta extends NdFieldDelta {
 
 	@Override
 	public void computeFootprint(MemoryFootprint weight) {
-		if(indices!=null) {
+		if(itemIdentifiers!=null) {
 			weight.reportInstance();
-			weight.reportReferences(indices.length);	
+			weight.reportReferences(itemIdentifiers.length);	
 		}
 	}
 

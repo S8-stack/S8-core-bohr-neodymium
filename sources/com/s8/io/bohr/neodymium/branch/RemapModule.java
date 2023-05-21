@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
+import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
@@ -63,11 +64,15 @@ public class RemapModule {
 		GraphCrawler crawler = new GraphCrawler() {
 			
 			@Override
-			public void accept(NdObject object) {
+			public void accept(NdObject object) throws NdIOException {
 				if(!object.S8_spin) {
 					
 					/* retrieve type */
 					NdType type = codebase.getType(object);
+					
+					if(type == null) {
+						throw new NdIOException("Cannot find type of: "+object.getClass().getName());
+					}
 					
 					String id = object.S8_id;
 

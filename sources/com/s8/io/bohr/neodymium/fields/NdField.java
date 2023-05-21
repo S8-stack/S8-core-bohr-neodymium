@@ -42,17 +42,8 @@ public abstract class NdField {
 	/**
 	 * 
 	 */
-	public final String flow;
+	public final String exportFormat;
 
-	/**
-	 * 
-	 */
-	public final long mask;
-
-	/**
-	 * 
-	 */
-	public final long flags;
 	
 	/**
 	 * 
@@ -66,9 +57,7 @@ public abstract class NdField {
 		
 		/* <field-properties> */
 		this.name = properties.getName();
-		this.flow = properties.getFlow();
-		this.mask = properties.getMask();
-		this.flags = properties.getFlags();
+		this.exportFormat = properties.getExportFormat();
 		/* </field-properties> */
 		
 		/* <handler> */
@@ -88,7 +77,7 @@ public abstract class NdField {
 	
 	/**
 	 * 
-	 * @param flow (null = use flow define in field)
+	 * @param exportFormat (null = use flow define in field)
 	 * @return
 	 * @throws  
 	 */

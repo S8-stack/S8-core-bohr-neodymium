@@ -19,10 +19,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties0T;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties1T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -50,7 +49,7 @@ public class EnumNdField extends NdField {
 			if(baseType.isEnum()) {
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
-					NdFieldProperties properties = new NdFieldProperties0T(this, NdFieldProperties.FIELD, baseType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, baseType);
 					properties.setFieldAnnotation(annotation);
 					return properties;	
 				}
@@ -66,7 +65,8 @@ public class EnumNdField extends NdField {
 			S8Setter annotation = method.getAnnotation(S8Setter.class);
 			if(annotation != null) {
 				if(baseType.isEnum()) {
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = 
+							new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setSetterAnnotation(annotation);
 					return properties;
 				}
@@ -85,7 +85,8 @@ public class EnumNdField extends NdField {
 			S8Getter annotation = method.getAnnotation(S8Getter.class);
 			if(annotation != null) {
 				if(baseType.isEnum()) {
-					NdFieldProperties properties = new NdFieldProperties1T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = 
+							new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setGetterAnnotation(annotation);
 					return properties;
 				}
@@ -272,7 +273,7 @@ public class EnumNdField extends NdField {
 	/* <IO-outflow-section> */
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 		case "uint8" : return new UInt8Composer(code);
 		case "uint16" : return new UInt16Composer(code);
 		case "uint32" : return new UInt32Composer(code);
@@ -286,7 +287,7 @@ public class EnumNdField extends NdField {
 			else {
 				return new UInt32Composer(code);
 			}
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

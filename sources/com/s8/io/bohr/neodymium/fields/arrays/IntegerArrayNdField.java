@@ -309,7 +309,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 
 
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "uint8[]" : return new UInt8Composer(code);
 		case "uint16[]" : return new UInt16Composer(code);
@@ -319,7 +319,7 @@ public class IntegerArrayNdField extends PrimitiveArrayNdField {
 		case "int16[]" : return new Int16Composer(code);
 		case DEFAULT_FLOW_TAG: case "int32[]" : return new Int32_Outflow(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

@@ -8,11 +8,12 @@ import java.util.Queue;
 
 import com.s8.io.bohr.atom.BOHR_Properties;
 import com.s8.io.bohr.atom.BOHR_Types;
-import com.s8.io.bohr.atom.BohrSerializable;
 import com.s8.io.bohr.atom.S8Exception;
 import com.s8.io.bohr.atom.annotations.S8Field;
 import com.s8.io.bohr.atom.annotations.S8Getter;
 import com.s8.io.bohr.atom.annotations.S8Setter;
+import com.s8.io.bohr.atom.serial.BohrSerialUtilities;
+import com.s8.io.bohr.atom.serial.BohrSerializable;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -22,9 +23,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
+import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
-import com.s8.io.bohr.neodymium.properties.NdFieldProperties0T;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bytes.alpha.ByteInflow;
@@ -39,7 +40,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class S8SerializableNdField extends NdField {
+public class S8SerializableNdField<T extends BohrSerializable> extends NdField {
 
 
 
@@ -52,7 +53,7 @@ public class S8SerializableNdField extends NdField {
 			if(BohrSerializable.class.isAssignableFrom(fieldType)){
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
-					NdFieldProperties properties = new NdFieldProperties0T(this, NdFieldProperties.FIELD, fieldType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, fieldType);
 					properties.setFieldAnnotation(annotation);
 					return properties;	
 				}
@@ -68,7 +69,7 @@ public class S8SerializableNdField extends NdField {
 			S8Setter annotation = method.getAnnotation(S8Setter.class);
 			if(annotation != null) {
 				if(BohrSerializable.class.isAssignableFrom(baseType)) {
-					NdFieldProperties properties = new NdFieldProperties0T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setSetterAnnotation(annotation);
 					return properties;
 				}
@@ -87,7 +88,7 @@ public class S8SerializableNdField extends NdField {
 			S8Getter annotation = method.getAnnotation(S8Getter.class);
 			if(annotation != null) {
 				if(BohrSerializable.class.isAssignableFrom(baseType)){
-					NdFieldProperties properties = new NdFieldProperties0T(this, NdFieldProperties.METHODS, baseType);
+					NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, baseType);
 					properties.setGetterAnnotation(annotation);
 					return properties;
 				}
@@ -123,13 +124,13 @@ public class S8SerializableNdField extends NdField {
 
 		@Override
 		public NdField build(int ordinal) throws NdBuildException {
-			return new S8SerializableNdField(ordinal, properties, handler);
+			return new S8SerializableNdField<>(ordinal, properties, handler);
 		}
 	}
 
 
 
-	private BohrSerializable.BohrSerialPrototype<?> deserializer;
+	private BohrSerializable.BohrSerialPrototype<T> deserializer;
 
 
 
@@ -143,7 +144,7 @@ public class S8SerializableNdField extends NdField {
 		super(ordinal, properties, handler);
 		Class<?> baseType = properties.getBaseType();
 		try {
-			deserializer = BohrSerializable.getDeserializer(baseType);
+			deserializer = BohrSerialUtilities.getDeserializer(baseType);
 		} 
 		catch (S8Exception e) {
 			e.printStackTrace();
@@ -194,15 +195,28 @@ public class S8SerializableNdField extends NdField {
 
 	@Override
 	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
-		BohrSerializable baseValue = (BohrSerializable) handler.get(base);
-		BohrSerializable updateValue = (BohrSerializable) handler.get(update);
-		return (baseValue!=null && !baseValue.equals(updateValue)) || (baseValue==null && updateValue!=null);
+		
+		@SuppressWarnings("unchecked")
+		T left = (T) handler.get(base);
+		
+		@SuppressWarnings("unchecked")
+		T right = (T) handler.get(update);
+		
+		if(left != null && right !=null) {
+			return deserializer.hasDelta(left, right);
+		}
+		else if((left != null && right == null) || (left == null && right != null)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 
 	@Override
 	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
-		return new S8SerializableNdFieldDelta(S8SerializableNdField.this, (BohrSerializable) handler.get(object));
+		return new S8SerializableNdFieldDelta<>(S8SerializableNdField.this, (BohrSerializable) handler.get(object));
 	}
 
 
@@ -251,13 +265,14 @@ public class S8SerializableNdField extends NdField {
 	private class Parser extends NdFieldParser {
 
 		@Override
-		public S8SerializableNdField getField() {
+		public S8SerializableNdField<T> getField() {
 			return S8SerializableNdField.this;
 		}
 
+		
 		@Override
 		public NdFieldDelta deserializeDelta(ByteInflow inflow) throws IOException {
-			return new S8SerializableNdFieldDelta(S8SerializableNdField.this, deserialize(inflow));
+			return new S8SerializableNdFieldDelta<>(S8SerializableNdField.this, deserialize(inflow));
 		}
 
 		private BohrSerializable deserialize(ByteInflow inflow) throws IOException {
@@ -280,11 +295,11 @@ public class S8SerializableNdField extends NdField {
 
 	@Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case DEFAULT_FLOW_TAG: case "serial" : return new Outflow(code);
 
-		default : throw new NdIOException("Impossible to match IO type for flow: "+flow);
+		default : throw new NdIOException("Impossible to match IO type for flow: "+exportFormat);
 		}
 	}
 
@@ -317,7 +332,8 @@ public class S8SerializableNdField extends NdField {
 
 		@Override
 		public void publishValue(NdFieldDelta delta, ByteOutflow outflow) throws IOException {
-			BohrSerializable value = ((S8SerializableNdFieldDelta) delta).value;
+			@SuppressWarnings("unchecked")
+			BohrSerializable value = ((S8SerializableNdFieldDelta<T>) delta).value;
 			if(value != null) {
 				outflow.putUInt8(BOHR_Properties.IS_NON_NULL_PROPERTIES_BIT);
 				value.serialize(outflow);

@@ -281,7 +281,7 @@ public class ShortArrayNdField extends PrimitiveArrayNdField {
 
 @Override
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "uint8[]" : return new UInt8_Outflow(code);
 		case "uint16[]" : return new UInt16_Outflow(code);
@@ -289,7 +289,7 @@ public class ShortArrayNdField extends PrimitiveArrayNdField {
 		case "int8[]" : return new Int8_Outflow(code);
 		case "int16[]" : return new Int16_Outflow(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 

@@ -104,9 +104,11 @@ public class NdCodebaseBuilder {
 			if(type.isAnnotationPresent(S8ObjectType.class)) {
 				queue.add(new NdTypeBuilder(type, isVerbose));
 			}
+			/*
 			else if(isVerbose) {
 				System.out.println("Type "+type+" has not been accepted because of lacking annotation");
-			}	
+			}
+			*/
 		}
 		
 		if(!isBuildingInProgress) {

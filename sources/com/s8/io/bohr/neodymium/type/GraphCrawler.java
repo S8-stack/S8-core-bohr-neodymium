@@ -18,7 +18,7 @@ public interface GraphCrawler {
 	 * @param object
 	 * @throws NdIOException
 	 */
-	public void accept(NdObject object);
+	public void accept(NdObject object) throws NdIOException;
 	
 	
 }

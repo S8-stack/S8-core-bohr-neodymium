@@ -24,15 +24,15 @@ public abstract class MyFloor extends NdObject {
 	public final static long HAS_CHANGED = 0x02;
 
 
-	public @S8Field(name = "x0", mask = HAS_CHANGED) double x0;
+	public @S8Field(name = "x0") double x0;
 
-	public @S8Field(name = "x1", mask = HAS_CHANGED) double x1;
+	public @S8Field(name = "x1") double x1;
 
-	public @S8Field(name = "y0", mask = HAS_CHANGED) double y0;
+	public @S8Field(name = "y0") double y0;
 
-	public @S8Field(name = "y1", mask = HAS_CHANGED) double y1;
+	public @S8Field(name = "y1") double y1;
 
-	public @S8Field(name = "ceiling-height", mask = HAS_CHANGED) double ceilingHeight;
+	public @S8Field(name = "ceiling-height") double ceilingHeight;
 
 	
 	public enum Face {

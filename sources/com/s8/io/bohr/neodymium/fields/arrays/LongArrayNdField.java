@@ -324,7 +324,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 	/* <IO-outflow-section> */
 
 	public NdFieldComposer createComposer(int code) throws NdIOException {
-		switch(flow) {
+		switch(exportFormat) {
 
 		case "uint8[]" : return new UInt8_Outflow(code);
 		case "uint16[]" : return new UInt16_Outflow(code);
@@ -336,7 +336,7 @@ public class LongArrayNdField extends PrimitiveArrayNdField {
 		case "int32[]" : return new Int32_Outflow(code);
 		case DEFAULT_FLOW_TAG: case "int64[]" : return new Int64_Outflow(code);
 
-		default : throw new NdIOException("Failed to find field-outflow for encoding: "+flow);
+		default : throw new NdIOException("Failed to find field-outflow for encoding: "+exportFormat);
 		}
 	}
 
