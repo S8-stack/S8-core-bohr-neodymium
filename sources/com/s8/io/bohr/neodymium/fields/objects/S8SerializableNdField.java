@@ -129,7 +129,7 @@ public class S8SerializableNdField extends NdField {
 
 
 
-	private BohrSerializable.S8SerialPrototype<?> deserializer;
+	private BohrSerializable.BohrSerialPrototype<?> deserializer;
 
 
 
@@ -243,12 +243,6 @@ public class S8SerializableNdField extends NdField {
 		if(code != BOHR_Types.SERIAL) {
 			throw new IOException("only array accepted");
 		}
-
-		String signature = deserializer.signature;
-		if(signature != deserializer.signature) {
-			throw new NdIOException("Unsupported SERIAL: "+printType());
-		}
-
 		// in fine, create parser
 		return new Parser();
 	}
@@ -307,7 +301,6 @@ public class S8SerializableNdField extends NdField {
 		@Override
 		public void publishFlowEncoding(ByteOutflow outflow) throws IOException {
 			outflow.putUInt8(BOHR_Types.SERIAL);
-			outflow.putStringUTF8(deserializer.signature);
 		}
 
 		@Override
