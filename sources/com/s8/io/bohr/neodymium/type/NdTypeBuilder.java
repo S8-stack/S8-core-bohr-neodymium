@@ -58,7 +58,7 @@ public class NdTypeBuilder {
 
 
 
-	private S8ObjectType typeAnnotation;
+	private final S8ObjectType typeAnnotation;
 
 
 
@@ -66,11 +66,11 @@ public class NdTypeBuilder {
 
 
 
-	public NdTypeBuilder(Class<?> type, boolean isVerbose) {
+	public NdTypeBuilder(Class<?> type, S8ObjectType typeAnnotation, boolean isVerbose) {
 		super();
 
-
 		this.baseType = type;
+		this.typeAnnotation = typeAnnotation;
 		this.isVerbose = isVerbose;
 	}
 
@@ -111,9 +111,6 @@ public class NdTypeBuilder {
 	 * @throws Exception 
 	 */
 	public boolean process(NdCodebaseBuilder codebaseBuilder) throws NdBuildException {
-
-		// retrieve typeAnnotation once and for all
-		typeAnnotation = baseType.getAnnotation(S8ObjectType.class);
 
 		// check status
 		check();
@@ -186,6 +183,7 @@ public class NdTypeBuilder {
 			else {
 				name = typeAnnotation.name();
 			}
+			
 		}
 
 	}

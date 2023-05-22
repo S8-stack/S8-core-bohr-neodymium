@@ -100,9 +100,19 @@ public class NdCodebaseBuilder {
 		// must not have already been added
 		if(!codebase.isTypeKnown(type)) {
 			
+			// retrieve typeAnnotation once and for all
+			S8ObjectType typeAnnotation = type.getAnnotation(S8ObjectType.class);
+
+			
 			// must be annotated
-			if(type.isAnnotationPresent(S8ObjectType.class)) {
-				queue.add(new NdTypeBuilder(type, isVerbose));
+			if(typeAnnotation != null) {
+				
+				String serialName = typeAnnotation.name();
+				if(codebase.typesBySerialName.containsKey(serialName)) {
+					throw new NdBuildException("Conflict for serial name: "+serialName+ ", for class : "+type.getName());
+				}
+				
+				queue.add(new NdTypeBuilder(type, typeAnnotation, isVerbose));
 			}
 			/*
 			else if(isVerbose) {
