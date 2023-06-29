@@ -301,6 +301,9 @@ public class NdTypeBuilder {
 			catch (ClassCastException e) {
 				throw new NdBuildException("Must inherit DkObject", baseType);
 			}	
+			catch (NoClassDefFoundError e) {
+				throw new NdBuildException("Failed to retrieve another class: "+e.getMessage(), baseType);
+			}	
 		}
 	}
 
