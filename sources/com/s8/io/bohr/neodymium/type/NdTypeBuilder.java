@@ -175,10 +175,12 @@ public class NdTypeBuilder {
 			Class<?> enclosingType = baseType.getEnclosingClass();
 			if(enclosingType!=null) {
 				S8ObjectType enclosingTypeAnnotation = enclosingType.getAnnotation(S8ObjectType.class);
-				if(enclosingTypeAnnotation==null) {
-					throw new NdBuildException("Missing enclosing type annotation", baseType);
-				}	
-				name = typeAnnotation.name()+'@'+enclosingTypeAnnotation.name();
+				if(enclosingTypeAnnotation!=null) {
+					name = typeAnnotation.name()+'@'+enclosingTypeAnnotation.name();
+				}
+				else {
+					name = typeAnnotation.name();
+				}
 			}
 			else {
 				name = typeAnnotation.name();
