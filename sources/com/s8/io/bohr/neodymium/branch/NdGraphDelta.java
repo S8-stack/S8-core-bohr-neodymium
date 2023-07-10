@@ -31,7 +31,7 @@ public class NdGraphDelta {
 
 
 	/**
-	 * Mandatriy version
+	 * Mandatory version info
 	 */
 	public final long targetVersion;
 
@@ -166,6 +166,32 @@ public class NdGraphDelta {
 	public void computeFootprint(MemoryFootprint weight) {
 		weight.reportInstance();
 		objectDeltas.forEach(delta -> delta.computeFootprint(weight));
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public long getTimestamp() {
+		return timestamp;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getAuthor() {
+		return author;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getComment() {
+		return comment;
 	}
 
 }
