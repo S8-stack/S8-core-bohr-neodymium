@@ -194,6 +194,10 @@ public class NdBranch {
 		return clone;
 	}
 
+	
+	public long commit(NdObject[] objects) throws IOException, S8ShellStructureException {
+		return commit(objects, -1L, null, null);
+	}
 
 	/**
 	 * 
@@ -201,7 +205,7 @@ public class NdBranch {
 	 * @throws IOException
 	 * @throws S8ShellStructureException
 	 */
-	public long commit(NdObject[] objects) throws IOException, S8ShellStructureException {
+	public long commit(NdObject[] objects, long timestamp, String author, String comment) throws IOException, S8ShellStructureException {
 		
 		
 		long version = head.version + 1;
@@ -211,6 +215,12 @@ public class NdBranch {
 		
 		/* commit changes */
 		NdGraphDelta delta = CommitNdModule.generateDelta(head, next);
+		
+		/* metadatas */
+		if(timestamp>=0) { delta.setTimestamp(timestamp); }
+		if(author != null) { delta.setAuthor(author); }
+		if(comment != null) { delta.setComment(comment); }
+		
 		
 		/* submit delta */
 		appendDelta(delta);

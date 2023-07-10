@@ -4,8 +4,11 @@ import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_JUMP;
 import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_SEQUENCE;
 import static com.s8.io.bohr.atom.BOHR_Keywords.CREATE_NODE;
 import static com.s8.io.bohr.atom.BOHR_Keywords.DECLARE_TYPE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_COMMENT;
+
 import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
+import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_AUTHOR;
+import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_COMMENT;
+
 import static com.s8.io.bohr.atom.BOHR_Keywords.EXPOSE_NODE;
 import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_JUMP;
 import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_SEQUENCE;
@@ -189,10 +192,13 @@ public class NdInbound {
 
 		while((code = inflow.getUInt8()) != CLOSE_JUMP) {
 			switch(code) {
-			
-			case DEFINE_JUMP_COMMENT: onDefineComment(inflow.getStringUTF8(), delta); break;
+		
+			/* <metadatas> */
 			case DEFINE_JUMP_TIMESTAMP: onDefineTimestamp(inflow.getUInt64(), delta); break;
-
+			case DEFINE_JUMP_AUTHOR: onDefineAuthor(inflow.getStringUTF8(), delta); break;
+			case DEFINE_JUMP_COMMENT: onDefineComment(inflow.getStringUTF8(), delta); break;
+			/* </metadatas> */
+			
 			case DECLARE_TYPE: onDeclareType(inflow); break;
 			
 			case CREATE_NODE: onCreateNode(inflow, delta); break;
@@ -231,15 +237,21 @@ public class NdInbound {
 
 	
 	
-	private void onDefineComment(String comment, NdGraphDelta delta) throws NdIOException {
-		delta.setComment(comment);
-	}
 
 	
 	private void onDefineTimestamp(long timestamp, NdGraphDelta delta) throws NdIOException {
 		delta.setTimestamp(timestamp);
 	}
 	
+
+	private void onDefineAuthor(String author, NdGraphDelta delta) throws NdIOException {
+		delta.setAuthor(author);
+	}
+	
+
+	private void onDefineComment(String comment, NdGraphDelta delta) throws NdIOException {
+		delta.setComment(comment);
+	}
 	
 	private void onCreateNode(ByteInflow inflow, NdGraphDelta delta) throws IOException {
 
