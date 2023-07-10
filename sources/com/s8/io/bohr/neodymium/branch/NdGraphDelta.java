@@ -80,14 +80,28 @@ public class NdGraphDelta {
 	
 	
 	
+	/**
+	 * 
+	 * @param timestamp
+	 */
 	public void setTimestamp(long timestamp) {
-		this.setTimestamp(timestamp);
+		this.timestamp = timestamp;
 	}
 	
+	
+	/**
+	 * 
+	 * @param author
+	 */
 	public void setAuthor(String author) {
 		this.author = author;
 	}
 	
+	
+	/**
+	 * 
+	 * @param comment
+	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
