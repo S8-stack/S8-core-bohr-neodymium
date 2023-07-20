@@ -13,7 +13,6 @@ import com.s8.io.bohr.neodymium.branch.operations.CompareNdModule;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.bytes.base64.Base64Generator;
 
 
 
@@ -71,13 +70,6 @@ public class NdBranch {
 
 
 	/**
-	 * highest index
-	 */
-	long highestIndex;
-
-
-
-	/**
 	 * 
 	 */
 	private final List<NdGraphDelta> deltas = new ArrayList<>();
@@ -88,15 +80,13 @@ public class NdBranch {
 	/**
 	 * last state
 	 */
-	private NdGraph head = new NdGraph();
+	private NdGraph head = NdGraph.createZeroStart();
 	
 
 
-	private RemapModule remapModule;
+	private MappingModule remapModule;
 	
-	
-	
-	private final Base64Generator idxGen;
+
 
 
 
@@ -112,15 +102,7 @@ public class NdBranch {
 		this.codebase = codebase;
 		this.id = id;
 
-		
-		idxGen = new Base64Generator(id+':');
-		
-		remapModule = new RemapModule(codebase, new IdGenerator() {
-			@Override
-			public String generateId() {
-				return idxGen.generate(highestIndex++);
-			}
-		});
+		remapModule = new MappingModule(codebase);
 	}
 	
 	
@@ -157,14 +139,6 @@ public class NdBranch {
 
 
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String createNewIndex() {
-		return idxGen.generate(++highestIndex);
-	}
-
 	
 	
 	/**
@@ -186,7 +160,7 @@ public class NdBranch {
 	 * @throws NdIOException
 	 */
 	public NdGraph cloneVersion(long version) throws NdIOException {
-		NdGraph clone = new NdGraph();
+		NdGraph clone = NdGraph.createZeroStart();
 		int index = 0;
 		while(clone.version < version) {
 			deltas.get(index++).operate(clone);
@@ -211,7 +185,7 @@ public class NdBranch {
 		long version = head.version + 1;
 		
 		/* build graph from exposure */
-		NdGraph next = remapModule.remap(version, objects);
+		NdGraph next = remapModule.remap(version, objects, id, head.lastAssignedIndex);
 		
 		/* commit changes */
 		NdGraphDelta delta = CommitNdModule.generateDelta(head, next);

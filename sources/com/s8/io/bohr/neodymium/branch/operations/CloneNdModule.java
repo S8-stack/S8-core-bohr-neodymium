@@ -28,7 +28,7 @@ public class CloneNdModule {
 	 * @throws S8ShellStructureException 
 	 * @throws IOException 
 	 */
-	public static NdGraph deepClone(NdGraph base) throws IOException, S8ShellStructureException {
+	public static NdGraph deepClone(NdGraph origin) throws IOException, S8ShellStructureException {
 		
 		
 		
@@ -37,7 +37,7 @@ public class CloneNdModule {
 		Map<String, NdVertex> cloneVertices = new HashMap<>();
 		BuildScope scope = BuildScope.fromVertices(cloneVertices);
 		
-		base.vertices.forEach((id, vertex) -> {
+		origin.vertices.forEach((id, vertex) -> {
 			try {
 				NdObject objectClone = vertex.type.deepClone(vertex.object, scope);
 				objectClone.S8_id = id;
@@ -58,7 +58,7 @@ public class CloneNdModule {
 		
 		
 		/* <exposure> */
-		NdObject[] baseExposure = base.exposure;
+		NdObject[] baseExposure = origin.exposure;
 		int range = baseExposure.length;
 		NdObject[] cloneExposure = new NdObject[range];
 		NdObject exposed;
@@ -69,10 +69,9 @@ public class CloneNdModule {
 		}
 		/* </exposure> */
 		
-		/**
-		 * 
-		 */
-		return new NdGraph(base.version, cloneVertices, cloneExposure);
+		
+		/** graph */
+		return new NdGraph(origin.version, cloneVertices, cloneExposure, origin.lastAssignedIndex);
 	}
 
 }

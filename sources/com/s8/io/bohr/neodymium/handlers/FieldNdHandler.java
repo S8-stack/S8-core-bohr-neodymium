@@ -194,7 +194,7 @@ public class FieldNdHandler implements NdHandler {
 			return field.getDouble(object);
 		}
 		catch (IllegalArgumentException | IllegalAccessException cause) {
-			throw new NdIOException("failed to read long field", field, cause);
+			throw new NdIOException("failed to read double field", field, cause);
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class FieldNdHandler implements NdHandler {
 			field.setFloat(object, value);
 		} 
 		catch ( IllegalArgumentException | IllegalAccessException cause) {
-			throw new NdIOException("failed to read long field", field, cause);
+			throw new NdIOException("failed to read float field", field, cause);
 		}
 	}
 

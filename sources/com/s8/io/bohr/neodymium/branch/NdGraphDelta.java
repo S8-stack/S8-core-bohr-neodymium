@@ -31,9 +31,9 @@ public class NdGraphDelta {
 
 
 	/**
-	 * Mandatory version info
+	 * Mandatory version info, i.e. the version of the graph AFTER having applied this delta
 	 */
-	public final long targetVersion;
+	public final long version;
 
 
 
@@ -62,7 +62,7 @@ public class NdGraphDelta {
 
 
 	/**
-	 * 
+	 * the last assigned index for objects created during this delta
 	 */
 	public long lastAssignedIndex = -1;
 
@@ -72,7 +72,7 @@ public class NdGraphDelta {
 	 */
 	public NdGraphDelta(long version) {
 		super();
-		this.targetVersion = version;
+		this.version = version;
 	}
 
 	
@@ -123,19 +123,30 @@ public class NdGraphDelta {
 	 * @throws NdIOException
 	 */
 	public void operate(NdGraph graph) throws NdIOException {
-		/* check version */
-		if(targetVersion != (graph.version + 1)) { 
-			throw new NdIOException("Mismatch in versions");
-		}
-		
+	
+		/* <update objects/exposure> */
 		BuildScope scope = graph.createBuildContext();
 		for(NdObjectDelta objectDelta : objectDeltas) { 
-			objectDelta.consume(graph, scope); 
+			objectDelta.consume(graph, scope);
 		}
 		scope.resolve();
+		/* </update objects/exposure> */
 		
-		/* increment version of graph */
+		
+		/* <version> */
+		if(version != (graph.version + 1)) { 
+			throw new NdIOException("Mismatch in versions");
+		}
 		graph.version++;
+		/* </version> */
+		
+		
+		/* <last-assigned-index> */
+		if(lastAssignedIndex < graph.lastAssignedIndex) {
+			throw new NdIOException("last assigned index cannot be smaller");
+		}
+		graph.lastAssignedIndex = lastAssignedIndex;
+		/* </last-assigned-index> */
 	}
 
 
@@ -145,7 +156,12 @@ public class NdGraphDelta {
 
 		outflow.putUInt8(OPEN_JUMP);
 		
-		outflow.putUInt64(targetVersion);
+		
+		/* version */
+		outflow.putUInt64(version);
+		
+		/* last assigned index */
+		outflow.putInt64(lastAssignedIndex);
 		
 		/* <metadatas> */
 		if(timestamp >= 0) {

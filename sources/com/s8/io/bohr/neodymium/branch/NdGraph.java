@@ -16,8 +16,17 @@ import com.s8.io.bohr.neodymium.type.BuildScope;
 public class NdGraph {
 
 	
+	public static NdGraph createZeroStart() {
+		return new NdGraph(0, new HashMap<>(), new NdObject[4], -1);
+	}
+	
+
+	/**
+	 * 
+	 */
 	public long version;
 
+	
 	/**
 	 * public final NdBranch branch;
 	 */
@@ -30,17 +39,13 @@ public class NdGraph {
 	 */
 	public final Map<String, NdVertex> vertices;
 
-	
-	
+
 	/**
 	 * 
 	 */
-	public NdGraph() {
-		super();
-		this.version = 0L;
-		this.vertices = new HashMap<String, NdVertex>();
-		this.exposure = new NdObject[4];
-	}
+	public long lastAssignedIndex;
+	
+	
 	
 	
 	
@@ -49,11 +54,12 @@ public class NdGraph {
 	 * @param vertices
 	 * @param exposure
 	 */
-	public NdGraph(long version, Map<String, NdVertex> vertices, NdObject[] exposure) {
+	public NdGraph(long version, Map<String, NdVertex> vertices, NdObject[] exposure, long lastAssignedIndex) {
 		super();
 		this.version = version;
 		this.vertices = vertices;
 		this.exposure = exposure;
+		this.lastAssignedIndex = lastAssignedIndex;
 	}
 	
 	
@@ -89,6 +95,7 @@ public class NdGraph {
 	 * @param port
 	 * @param object
 	 */
+	
 	public void expose(int port, NdObject vertex) {
 		int range = exposure.length;
 		if(port >= range) {
@@ -100,7 +107,6 @@ public class NdGraph {
 		}
 		exposure[port] = vertex;
 	}
-	
 	
 	/**
 	 * <b>(Internal use only)</b>

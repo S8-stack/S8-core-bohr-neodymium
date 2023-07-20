@@ -188,7 +188,11 @@ public class NdInbound {
 
 		long version = inflow.getUInt64();
 		
+		/* last aisggnede leta : int6', since -1 can be used */
+		long lastAssignedDelta = inflow.getInt64();
+		
 		NdGraphDelta delta = new NdGraphDelta(version);
+		delta.lastAssignedIndex = lastAssignedDelta;
 
 		while((code = inflow.getUInt8()) != CLOSE_JUMP) {
 			switch(code) {

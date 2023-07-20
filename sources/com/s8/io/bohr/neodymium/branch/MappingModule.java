@@ -8,27 +8,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.s8.io.bohr.neodymium.NdConstants;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bohr.neodymium.type.NdType;
+import com.s8.io.bytes.base64.Base64IdGenerator;
 
-public class RemapModule {
+
+/**
+ * 
+ * @author pierreconvert
+ *
+ */
+public class MappingModule {
 	
 	
+	/**
+	 * 
+	 */
 	public final NdCodebase codebase;
 	
 	
-	public final IdGenerator idGenerator;
 	
 	
-	
-	public RemapModule(NdCodebase codebase, IdGenerator idGenerator) {
+	public MappingModule(NdCodebase codebase) {
 		super();
 		this.codebase = codebase;
-		this.idGenerator = idGenerator;
 	}
 
 
@@ -39,7 +47,8 @@ public class RemapModule {
 	 * @param objects
 	 * @throws IOException 
 	 */
-	public NdGraph remap(long version, NdObject[] objects) throws IOException {
+	public NdGraph remap(long version, NdObject[] objects, String branchName, long lastAssignedIndex) throws IOException {
+		
 		
 		
 		if(objects == null) {
@@ -50,6 +59,8 @@ public class RemapModule {
 			throw new IOException("Cannot exceed exposure range");
 		}
 		
+		
+		Base64IdGenerator idGen = new Base64IdGenerator(branchName + NdConstants.ID_SEPARATOR, lastAssignedIndex);
 		
 		
 		Map<String, NdVertex> vertices = new HashMap<>();
@@ -88,7 +99,7 @@ public class RemapModule {
 					if(id == null) {
 
 						/* index */
-						id = idGenerator.generateId();
+						id = idGen.generate();
 
 						/* index */
 						object.S8_id = id;
@@ -122,6 +133,6 @@ public class RemapModule {
 		rollback.forEach(object -> { object.S8_spin = false; });
 		
 		
-		return new NdGraph(version, vertices, objects);
+		return new NdGraph(version, vertices, objects, idGen.getLastAssignedIndex());
 	}
 }
