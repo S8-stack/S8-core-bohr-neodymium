@@ -3,10 +3,10 @@ package com.s8.io.bohr.neodymium.fields.collections;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.io.bohr.atom.BOHR_Types;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 
 
@@ -40,7 +40,7 @@ public abstract class CollectionNdField extends NdField {
 
 	public interface ItemConsumer {
 
-		public void consume(NdObject item) throws IOException;
+		public void consume(RepoS8Object item) throws IOException;
 	}
 
 
@@ -60,7 +60,7 @@ public abstract class CollectionNdField extends NdField {
 		}
 
 		@Override
-		public void consume(NdObject item) throws IOException {
+		public void consume(RepoS8Object item) throws IOException {
 			if(isInitialized) {
 				writer.write(" ,");	
 			}
@@ -82,8 +82,8 @@ public abstract class CollectionNdField extends NdField {
 
 
 	@Override
-	protected void printValue(NdObject object, Writer writer) throws IOException {
-		NdObject[] array = (NdObject[]) handler.get(object);
+	protected void printValue(RepoS8Object object, Writer writer) throws IOException {
+		RepoS8Object[] array = (RepoS8Object[]) handler.get(object);
 		if(array!=null) {
 			writer.write('[');
 			forEach(object, new Printer(writer));

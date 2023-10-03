@@ -6,13 +6,13 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.operations.CloneNdModule;
 import com.s8.io.bohr.neodymium.branch.operations.CommitNdModule;
 import com.s8.io.bohr.neodymium.branch.operations.CompareNdModule;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 
 
 
@@ -169,7 +169,7 @@ public class NdBranch {
 	}
 
 	
-	public long commit(NdObject[] objects) throws IOException, S8ShellStructureException {
+	public long commit(RepoS8Object[] objects) throws IOException, S8ShellStructureException {
 		return commit(objects, -1L, null, null);
 	}
 
@@ -179,7 +179,7 @@ public class NdBranch {
 	 * @throws IOException
 	 * @throws S8ShellStructureException
 	 */
-	public long commit(NdObject[] objects, long timestamp, String author, String comment) throws IOException, S8ShellStructureException {
+	public long commit(RepoS8Object[] objects, long timestamp, String author, String comment) throws IOException, S8ShellStructureException {
 		
 		
 		long version = head.version + 1;

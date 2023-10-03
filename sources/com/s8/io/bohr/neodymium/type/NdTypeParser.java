@@ -1,15 +1,15 @@
 package com.s8.io.bohr.neodymium.type;
 
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_NODE;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DECLARE_FIELD;
-import static com.s8.io.bohr.atom.BOHR_Keywords.SET_VALUE;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_NODE;
+import static com.s8.api.bohr.BOHR_Keywords.DECLARE_FIELD;
+import static com.s8.api.bohr.BOHR_Keywords.SET_VALUE;
 
 import java.io.IOException;
 
+import com.s8.api.bytes.ByteInflow;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
-import com.s8.io.bytes.alpha.ByteInflow;
 
 /**
  * 

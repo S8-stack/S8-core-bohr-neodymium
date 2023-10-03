@@ -10,9 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8Setter;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8Setter;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -23,13 +27,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
 import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 
@@ -41,7 +41,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
+public class S8ObjectListNdField<T extends RepoS8Object> extends CollectionNdField {
 
 
 
@@ -58,7 +58,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 					Type parameterType = field.getGenericType();
 					Class<?> typeArgument =  getParameterTypeClass(parameterType);
 
-					if(NdObject.class.isAssignableFrom(typeArgument)) {
+					if(RepoS8Object.class.isAssignableFrom(typeArgument)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, 
 								typeArgument);
 						properties.setFieldAnnotation(annotation);
@@ -85,7 +85,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 					Type parameterType = method.getGenericParameterTypes()[0];
 					Class<?> typeArgument = getParameterTypeClass(parameterType);
 
-					if(NdObject.class.isAssignableFrom(typeArgument)) {
+					if(RepoS8Object.class.isAssignableFrom(typeArgument)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
 								typeArgument);
 						properties.setSetterAnnotation(annotation);
@@ -110,7 +110,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 					Type parameterType = method.getGenericReturnType();
 					Class<?> typeArgument = getParameterTypeClass(parameterType);
 
-					if(NdObject.class.isAssignableFrom(typeArgument)) {
+					if(RepoS8Object.class.isAssignableFrom(typeArgument)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR,
 								typeArgument);
 						properties.setGetterAnnotation(annotation);
@@ -211,7 +211,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 				String id = itemIdentifiers[index];
 				if(id != null) {
 					// might be null
-					NdObject struct = scope.retrieveObject(id);
+					RepoS8Object struct = scope.retrieveObject(id);
 					if(struct!=null) {
 						list.add((T) struct);		
 					}
@@ -230,14 +230,14 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	public void sweep(NdObject object, GraphCrawler crawler) {
+	public void sweep(RepoS8Object object, GraphCrawler crawler) {
 		try {
 			@SuppressWarnings("unchecked")
 			List<T> list = (List<T>) handler.get(object);
 
 
 			if(list!=null) {
-				for(NdObject item : list) {
+				for(RepoS8Object item : list) {
 					if(item!=null) { crawler.accept(item); }
 				}
 			}
@@ -255,10 +255,10 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	public void computeFootprint(NdObject object, MemoryFootprint weight) throws NdIOException {
+	public void computeFootprint(RepoS8Object object, MemoryFootprint weight) throws NdIOException {
 
 		@SuppressWarnings("unchecked")
-		List<NdObject> list = (List<NdObject>) handler.get(object);
+		List<RepoS8Object> list = (List<RepoS8Object>) handler.get(object);
 		if(list!=null) {
 			weight.reportInstances(1+list.size()); // the array object itself	
 			weight.reportReferences(list.size());
@@ -267,7 +267,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
+	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
 
 		@SuppressWarnings("unchecked")
 		List<T> value = (List<T>) handler.get(origin);
@@ -290,7 +290,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	public void collectReferencedBlocks(NdObject object, Queue<String> references) {
+	public void collectReferencedBlocks(RepoS8Object object, Queue<String> references) {
 		/* not referencing external values */
 	}
 
@@ -302,7 +302,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
+	public boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException {
 		List<T> baseValue = (List<T>) handler.get(base);
 		List<T> updateValue = (List<T>) handler.get(update);
 		return !areEqual(baseValue, updateValue);
@@ -311,14 +311,14 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
+	public NdFieldDelta produceDiff(RepoS8Object object) throws NdIOException {
 		@SuppressWarnings("unchecked")
 		List<T> array = (List<T>) handler.get(object);
 		String[] indices = null;
 		if(array!=null) {
 			int n = array.size();
 			indices = new String[n];
-			NdObject item;
+			RepoS8Object item;
 			for(int i=0; i<n; i++) {
 				item = array.get(i);
 				indices[i] = (item != null ? item.S8_id : null);	
@@ -342,7 +342,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 		if(n0!=n1) { return false; }
 
 		// check values
-		NdObject obj0, obj1;
+		RepoS8Object obj0, obj1;
 		for(int i=0; i<n0; i++) {
 			obj0 = array0.get(i);
 			obj1 = array1.get(i);
@@ -357,7 +357,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 
 
 	@Override
-	protected void printValue(NdObject object, Writer writer) throws IOException {
+	protected void printValue(RepoS8Object object, Writer writer) throws IOException {
 		@SuppressWarnings("unchecked")
 		List<T> list = (List<T>) handler.get(object);
 		if(list!=null) {
@@ -372,7 +372,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 					isInitialized = true;
 				}
 
-				NdObject value = list.get(i);
+				RepoS8Object value = list.get(i);
 				if(value!=null) {
 					writer.write("(");
 					writer.write(value.getClass().getCanonicalName());
@@ -412,7 +412,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 	}
 
 	@Override
-	public boolean isValueResolved(NdObject object) {
+	public boolean isValueResolved(RepoS8Object object) {
 		return false; // never resolved
 	}
 
@@ -509,7 +509,7 @@ public class S8ObjectListNdField<T extends NdObject> extends CollectionNdField {
 		}
 
 		@Override
-		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
+		public void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException {
 			@SuppressWarnings("unchecked")
 			List<T> list = (List<T>) handler.get(object);
 

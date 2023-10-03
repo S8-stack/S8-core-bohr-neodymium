@@ -2,10 +2,10 @@ package com.s8.io.bohr.neodymium.demos.repo0;
 
 import java.util.List;
 
-import com.s8.io.bohr.atom.S8Exception;
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.object.NdRef;
 
 
@@ -17,7 +17,7 @@ import com.s8.io.bohr.neodymium.object.NdRef;
  * 
  */
 @S8ObjectType(name = "Dclib/MyTechModel")
-public class MyTechModel extends NdObject {
+public class MyTechModel extends RepoS8Object {
 
 
 	/**
@@ -46,18 +46,18 @@ public class MyTechModel extends NdObject {
 	/**
 	 * 
 	 * @param value
-	 * @throws S8Exception
+	 * @throws S8IOException
 	 */
-	public void expand2(double value) throws S8Exception {
+	public void expand2(double value) throws S8IOException {
 		projects.add(new MyProject());
 	}
 	
 	
 	/**
 	 * 
-	 * @throws S8Exception
+	 * @throws S8IOException
 	 */
-	public void expand() throws S8Exception {
+	public void expand() throws S8IOException {
 		projects.add(new MyProject());
 	}
 

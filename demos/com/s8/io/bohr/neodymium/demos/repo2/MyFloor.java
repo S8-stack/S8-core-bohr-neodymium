@@ -1,8 +1,8 @@
     package com.s8.io.bohr.neodymium.demos.repo2;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.repo.RepoS8Object;
 
 
 
@@ -19,7 +19,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
 		MyCommercialFloor.class,
 		MyEmptyFloor.class
 })
-public abstract class MyFloor extends NdObject {
+public abstract class MyFloor extends RepoS8Object {
 
 	public final static long HAS_CHANGED = 0x02;
 

@@ -3,10 +3,10 @@ package com.s8.io.bohr.neodymium.branch.operations;
 import java.io.IOException;
 import java.io.Writer;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.type.NdType;
 
 public class PrintNdModule {
@@ -22,7 +22,7 @@ public class PrintNdModule {
 		graph.vertices.forEach((index, vertex) -> {
 			try {
 				NdType type = vertex.type;
-				NdObject object = vertex.getObject();
+				RepoS8Object object = vertex.getObject();
 				type.print(object, writer);
 			} 
 			catch (NdIOException e) {

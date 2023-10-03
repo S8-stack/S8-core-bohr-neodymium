@@ -41,6 +41,7 @@ module com.s8.io.bohr.neodymium {
 	/* </neodymium> */
 	
 	
+	requires transitive com.s8.api;
 	requires transitive com.s8.io.bytes;
 	requires transitive com.s8.io.bohr.atom;
 }

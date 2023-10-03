@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 
 
@@ -41,7 +41,7 @@ public abstract class BuildScope {
 	 * @param index
 	 * @return
 	 */
-	public abstract NdObject retrieveObject(String id);
+	public abstract RepoS8Object retrieveObject(String id);
 	
 	/**
 	 * <p><b>ALWAYS RESOLVE AFTER DESERIALIZATION</b></p>
@@ -85,7 +85,7 @@ public abstract class BuildScope {
 		return new BuildScope() {
 
 			@Override
-			public NdObject retrieveObject(String id) {
+			public RepoS8Object retrieveObject(String id) {
 				NdVertex vertex = vertices.get(id);
 				if(vertex == null) {
 					throw new RuntimeException("Cannot find vertex");

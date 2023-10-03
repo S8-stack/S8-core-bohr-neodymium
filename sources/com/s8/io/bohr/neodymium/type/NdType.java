@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
-import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -117,7 +117,7 @@ public class NdType {
 	 * @param object
 	 * @param footprint
 	 */
-	public void computeFootprint(NdObject object, MemoryFootprint footprint) {
+	public void computeFootprint(RepoS8Object object, MemoryFootprint footprint) {
 		footprint.reportInstance();
 		fieldsByName.forEach((name, handler) -> {  
 			try {
@@ -137,9 +137,9 @@ public class NdType {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public NdObject createNewInstance() throws NdIOException {
+	public RepoS8Object createNewInstance() throws NdIOException {
 		try {
-			return (NdObject) constructor.newInstance(new Object[]{});
+			return (RepoS8Object) constructor.newInstance(new Object[]{});
 		}
 		catch (InstantiationException 
 				| IllegalAccessException 
@@ -166,7 +166,7 @@ public class NdType {
 	 * @throws IOException 
 	 * @throws S8ShellStructureException 
 	 */
-	public void sweep(NdObject object, GraphCrawler crawler) throws NdIOException {
+	public void sweep(RepoS8Object object, GraphCrawler crawler) throws NdIOException {
 		int nFields = fields.length;
 		for(int i = 0; i<nFields; i++) { fields[i].sweep(object, crawler); }
 	}
@@ -190,7 +190,7 @@ public class NdType {
 	 * @param object
 	 * @param references
 	 */
-	public void collectReferencedBlocks(NdObject object, Queue<String> references) {
+	public void collectReferencedBlocks(RepoS8Object object, Queue<String> references) {
 		for(NdField entryHandler : fieldsByName.values()) {
 			entryHandler.collectReferencedBlocks(object, references);	
 		}
@@ -204,8 +204,8 @@ public class NdType {
 	 * @return
 	 * @throws LthSerialException
 	 */
-	public NdObject deepClone(NdObject origin, BuildScope scope) throws NdIOException {
-		NdObject clone = createNewInstance();
+	public RepoS8Object deepClone(RepoS8Object origin, BuildScope scope) throws NdIOException {
+		RepoS8Object clone = createNewInstance();
 		for(NdField field : fields) {
 			field.deepClone(origin, clone, scope);
 		}
@@ -236,7 +236,7 @@ public class NdType {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void print(NdObject object, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(RepoS8Object object, Writer writer) throws IOException, S8ShellStructureException {
 		debugModule.print(object, writer);
 	}
 
@@ -249,7 +249,7 @@ public class NdType {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public void deepCompare(NdObject left, NdObject right, Writer writer) throws IOException, S8ShellStructureException {
+	public void deepCompare(RepoS8Object left, RepoS8Object right, Writer writer) throws IOException, S8ShellStructureException {
 		debugModule.deepCompare(left, right, writer);
 	}
 	
@@ -271,7 +271,7 @@ public class NdType {
 	 * @param scope
 	 * @throws IOException
 	 */
-	public void consumeDiff(NdObject object, List<NdFieldDelta> deltas, BuildScope scope) throws NdIOException {
+	public void consumeDiff(RepoS8Object object, List<NdFieldDelta> deltas, BuildScope scope) throws NdIOException {
 		for(NdFieldDelta delta : deltas) {
 			delta.consume(object, scope);
 		}
@@ -290,7 +290,7 @@ public class NdType {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<NdFieldDelta> produceCreateDeltas(NdObject object) throws IOException {
+	public List<NdFieldDelta> produceCreateDeltas(RepoS8Object object) throws IOException {
 		int n = fields.length;
 		List<NdFieldDelta> deltas = new ArrayList<NdFieldDelta>(n);
 		for(int i=0; i<n; i++) {

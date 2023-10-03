@@ -1,9 +1,9 @@
 package com.s8.io.bohr.neodymium.demos.repo0;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.api.bytes.Bool64;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
 import com.s8.io.bohr.neodymium.object.NdRef;
-import com.s8.io.bytes.alpha.Bool64;
 
 
 @S8ObjectType(name = "car")

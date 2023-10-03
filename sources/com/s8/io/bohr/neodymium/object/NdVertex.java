@@ -5,13 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.objects.repo.RepoS8Vertex;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bohr.neodymium.type.NdType;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -28,7 +30,7 @@ import com.s8.io.bytes.alpha.MemoryFootprint;
  * Copyright (C) 2022, Pierre Convert. All rights reserved.
  * 
  */
-public class NdVertex {
+public class NdVertex extends RepoS8Vertex {
 
 
 
@@ -43,7 +45,7 @@ public class NdVertex {
 	public final NdType type;
 
 
-	public NdObject object;
+	public RepoS8Object object;
 
 
 
@@ -107,7 +109,7 @@ public class NdVertex {
 
 
 	
-	public NdObject getObject() {
+	public RepoS8Object getObject() {
 		return object;
 	}
 
@@ -141,7 +143,7 @@ public class NdVertex {
 	 */
 	public void publishUpdate(NdVertex base, List<NdObjectDelta> objectDeltas) throws NdIOException {
 		
-		NdObject baseObject = base.object;
+		RepoS8Object baseObject = base.object;
 		boolean hasDelta = false;
 		List<NdFieldDelta> fieldDeltas = null;
 

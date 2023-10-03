@@ -3,7 +3,10 @@ package com.s8.io.bohr.neodymium.object;
 import java.io.IOException;
 import java.util.List;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
@@ -11,8 +14,6 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.NdType;
 import com.s8.io.bohr.neodymium.type.NdTypeComposer;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -66,7 +67,7 @@ public class CreateNdObjectDelta extends NdObjectDelta {
 	public void consume(NdGraph graph, BuildScope scope) throws NdIOException {
 
 		// create object
-		NdObject object = type.createNewInstance();
+		RepoS8Object object = type.createNewInstance();
 
 		/* clear spin */
 		object.S8_spin = false;

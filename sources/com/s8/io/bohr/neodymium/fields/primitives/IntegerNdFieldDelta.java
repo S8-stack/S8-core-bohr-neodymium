@@ -1,11 +1,11 @@
 package com.s8.io.bohr.neodymium.fields.primitives;
 
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.type.BuildScope;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class IntegerNdFieldDelta  extends NdFieldDelta {
 	}
 
 	@Override
-	public void consume(NdObject object, BuildScope scope) throws NdIOException {
+	public void consume(RepoS8Object object, BuildScope scope) throws NdIOException {
 		field.handler.setInteger(object, value);
 	}
 

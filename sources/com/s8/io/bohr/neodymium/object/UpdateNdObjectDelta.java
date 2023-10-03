@@ -3,16 +3,17 @@ package com.s8.io.bohr.neodymium.object;
 import java.io.IOException;
 import java.util.List;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.atom.S8Exception;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.exceptions.S8IOException;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.NdType;
 import com.s8.io.bohr.neodymium.type.NdTypeComposer;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -83,11 +84,11 @@ public class UpdateNdObjectDelta extends NdObjectDelta {
 			NdVertex vertex = graph.vertices.get(index);
 
 			if(vertex==null) {
-				throw new S8Exception("failed to retrieve vertex for index: "+index);
+				throw new S8IOException("failed to retrieve vertex for index: "+index);
 			}
 
 			// retrieve object
-			NdObject object = vertex.object;
+			RepoS8Object object = vertex.object;
 			
 			// retrieve type
 			NdType type = vertex.type;

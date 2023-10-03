@@ -3,7 +3,11 @@ package com.s8.io.bohr.neodymium.fields.primitives;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.io.bohr.atom.BOHR_Types;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -12,12 +16,8 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 /**
  * 
@@ -70,26 +70,26 @@ public class IntegerNdField extends PrimitiveNdField {
 	}
 
 	@Override
-	public void computeFootprint(NdObject object, MemoryFootprint weight) {
+	public void computeFootprint(RepoS8Object object, MemoryFootprint weight) {
 		weight.reportBytes(4);
 	}
 
 
 	@Override
-	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
+	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
 		int value = handler.getInteger(origin);
 		handler.setInteger(clone, value);
 	}
 
 	@Override
-	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
+	public boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException {
 		int baseValue = handler.getInteger(base);
 		int updateValue = handler.getInteger(update);
 		return baseValue != updateValue;
 	}
 
 	@Override
-	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
+	public NdFieldDelta produceDiff(RepoS8Object object) throws NdIOException {
 		return new IntegerNdFieldDelta(this, handler.getInteger(object));
 	}
 
@@ -102,7 +102,7 @@ public class IntegerNdField extends PrimitiveNdField {
 
 
 	@Override
-	protected void printValue(NdObject object, Writer writer) throws IOException {
+	protected void printValue(RepoS8Object object, Writer writer) throws IOException {
 		writer.write(Integer.toString(handler.getInteger(object)));
 	}
 
@@ -217,7 +217,7 @@ public class IntegerNdField extends PrimitiveNdField {
 
 
 		@Override
-		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
+		public void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException {
 			serialize(outflow, handler.getInteger(object));
 		}
 

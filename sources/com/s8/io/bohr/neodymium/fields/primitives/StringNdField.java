@@ -3,7 +3,11 @@ package com.s8.io.bohr.neodymium.fields.primitives;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.io.bohr.atom.BOHR_Types;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -12,12 +16,8 @@ import com.s8.io.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -76,13 +76,13 @@ public class StringNdField extends PrimitiveNdField {
 	
 	
 	@Override
-	public StringNdFieldDelta produceDiff(NdObject object) throws NdIOException {
+	public StringNdFieldDelta produceDiff(RepoS8Object object) throws NdIOException {
 		return new StringNdFieldDelta(this, handler.getString(object));
 	}
 
 
 	@Override
-	public void computeFootprint(NdObject object, MemoryFootprint weight) throws NdIOException {
+	public void computeFootprint(RepoS8Object object, MemoryFootprint weight) throws NdIOException {
 		String value = handler.getString(object);
 		if(value!=null) {
 			weight.reportInstance();
@@ -91,14 +91,14 @@ public class StringNdField extends PrimitiveNdField {
 	}
 
 	@Override
-	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
+	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
 		String value = handler.getString(origin);
 		handler.setString(clone, value);
 	}
 
 
 	@Override
-	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
+	public boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException {
 		String baseValue = handler.getString(base);
 		String updateValue = handler.getString(update);
 		if(baseValue==null && updateValue==null) {
@@ -121,7 +121,7 @@ public class StringNdField extends PrimitiveNdField {
 
 
 	@Override
-	protected void printValue(NdObject object, Writer writer) throws IOException {
+	protected void printValue(RepoS8Object object, Writer writer) throws IOException {
 		String val = handler.getString(object);
 		writer.write(val!=null ? val : "<null>");
 	}
@@ -194,7 +194,7 @@ public class StringNdField extends PrimitiveNdField {
 		}
 
 		@Override
-		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
+		public void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException {
 			outflow.putStringUTF8(handler.getString(object));
 		}
 

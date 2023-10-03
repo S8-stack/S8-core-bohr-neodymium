@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 
@@ -39,7 +39,7 @@ public class CloneNdModule {
 		
 		origin.vertices.forEach((id, vertex) -> {
 			try {
-				NdObject objectClone = vertex.type.deepClone(vertex.object, scope);
+				RepoS8Object objectClone = vertex.type.deepClone(vertex.object, scope);
 				objectClone.S8_id = id;
 				NdVertex vertexClone = new NdVertex(vertex.type);
 				vertexClone.object = objectClone;
@@ -58,10 +58,10 @@ public class CloneNdModule {
 		
 		
 		/* <exposure> */
-		NdObject[] baseExposure = origin.exposure;
+		RepoS8Object[] baseExposure = origin.exposure;
 		int range = baseExposure.length;
-		NdObject[] cloneExposure = new NdObject[range];
-		NdObject exposed;
+		RepoS8Object[] cloneExposure = new RepoS8Object[range];
+		RepoS8Object exposed;
 		for(int slot = 0; slot < range; slot++) {
 			if((exposed = baseExposure[slot]) != null) {
 				cloneExposure[slot] = cloneVertices.get(exposed.S8_id).object;

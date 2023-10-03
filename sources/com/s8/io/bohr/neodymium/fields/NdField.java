@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Queue;
 
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 /**
  * 
@@ -89,7 +89,7 @@ public abstract class NdField {
 	
 
 
-	public abstract void computeFootprint(NdObject object, MemoryFootprint weight) throws NdIOException;
+	public abstract void computeFootprint(RepoS8Object object, MemoryFootprint weight) throws NdIOException;
 
 	/**
 	 * Collect all INTERNAL (belonging to this block) object not already in the
@@ -102,14 +102,14 @@ public abstract class NdField {
 	 * @throws IOException
 	 * @throws S8ShellStructureException 
 	 */
-	public abstract void sweep(NdObject object, GraphCrawler crawler) throws NdIOException;
+	public abstract void sweep(RepoS8Object object, GraphCrawler crawler) throws NdIOException;
 
 	/**
 	 * Collect all external blocks with flag not already set to true
 	 * 
 	 * @param object
 	 */
-	public abstract void collectReferencedBlocks(NdObject object, Queue<String> references);
+	public abstract void collectReferencedBlocks(RepoS8Object object, Queue<String> references);
 
 	
 
@@ -126,7 +126,7 @@ public abstract class NdField {
 	 * @param bindings
 	 * @throws LthSerialException
 	 */
-	public abstract void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException;
+	public abstract void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException;
 
 	/**
 	 * 
@@ -136,7 +136,7 @@ public abstract class NdField {
 	 * @throws LthSerialException
 	 * @throws IOException
 	 */
-	public abstract boolean hasDiff(NdObject base, NdObject update) throws NdIOException;
+	public abstract boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException;
 
 
 	/**
@@ -150,11 +150,11 @@ public abstract class NdField {
 	 * @return
 	 * @throws IOException
 	 */
-	public abstract NdFieldDelta produceDiff(NdObject object) throws NdIOException;
+	public abstract NdFieldDelta produceDiff(RepoS8Object object) throws NdIOException;
 
 	
 
-	public void print(NdObject object, Writer writer) throws IOException, S8ShellStructureException {
+	public void print(RepoS8Object object, Writer writer) throws IOException, S8ShellStructureException {
 		writer.append("(");
 		writer.append(printType());
 		writer.append(") ");
@@ -170,7 +170,7 @@ public abstract class NdField {
 	public abstract String printType();
 
 
-	protected abstract void printValue(NdObject object, Writer writer) throws NdIOException, 
+	protected abstract void printValue(RepoS8Object object, Writer writer) throws NdIOException, 
 	IOException, S8ShellStructureException;
 
 	
@@ -181,7 +181,7 @@ public abstract class NdField {
 	 * @return true is the object has been resolved, false otherwise
 	 * @throws LthSerialException 
 	 */
-	public abstract boolean isValueResolved(NdObject object) throws NdIOException;
+	public abstract boolean isValueResolved(RepoS8Object object) throws NdIOException;
 
 	
 }

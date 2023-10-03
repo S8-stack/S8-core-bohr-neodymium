@@ -3,7 +3,7 @@ package com.s8.io.bohr.neodymium.branch;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 
@@ -17,7 +17,7 @@ public class NdGraph {
 
 	
 	public static NdGraph createZeroStart() {
-		return new NdGraph(0, new HashMap<>(), new NdObject[4], -1);
+		return new NdGraph(0, new HashMap<>(), new RepoS8Object[4], -1);
 	}
 	
 
@@ -30,7 +30,7 @@ public class NdGraph {
 	/**
 	 * public final NdBranch branch;
 	 */
-	public NdObject[] exposure;
+	public RepoS8Object[] exposure;
 	
 	
 
@@ -54,7 +54,7 @@ public class NdGraph {
 	 * @param vertices
 	 * @param exposure
 	 */
-	public NdGraph(long version, Map<String, NdVertex> vertices, NdObject[] exposure, long lastAssignedIndex) {
+	public NdGraph(long version, Map<String, NdVertex> vertices, RepoS8Object[] exposure, long lastAssignedIndex) {
 		super();
 		this.version = version;
 		this.vertices = vertices;
@@ -68,7 +68,7 @@ public class NdGraph {
 	
 
 
-	public NdObject retrieveObject(String index) {
+	public RepoS8Object retrieveObject(String index) {
 		return vertices.get(index).object;
 	}
 	
@@ -96,10 +96,10 @@ public class NdGraph {
 	 * @param object
 	 */
 	
-	public void expose(int port, NdObject vertex) {
+	public void expose(int port, RepoS8Object vertex) {
 		int range = exposure.length;
 		if(port >= range) {
-			NdObject[] expansion = new NdObject[range > 0 ? 2 * range : 2];
+			RepoS8Object[] expansion = new RepoS8Object[range > 0 ? 2 * range : 2];
 			for(int i=0; i<range; i++) {
 				expansion[i] = exposure[i];
 			}
@@ -129,7 +129,7 @@ public class NdGraph {
 	public BuildScope createBuildContext() {
 		return new BuildScope() {
 			@Override
-			public NdObject retrieveObject(String index) {
+			public RepoS8Object retrieveObject(String index) {
 				return vertices.get(index).object;
 			}
 		};

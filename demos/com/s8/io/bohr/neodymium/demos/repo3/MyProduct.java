@@ -1,8 +1,8 @@
 package com.s8.io.bohr.neodymium.demos.repo3;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.repo.RepoS8Object;
 
 
 /**
@@ -12,7 +12,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  *
  */
 @S8ObjectType(name = "product")
-public class MyProduct extends NdObject {
+public class MyProduct extends RepoS8Object {
 
 
 	@S8Field(name = "description")

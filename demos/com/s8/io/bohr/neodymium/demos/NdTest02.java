@@ -3,6 +3,7 @@ package com.s8.io.bohr.neodymium.demos;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.branch.NdBranch;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdInbound;
@@ -10,7 +11,6 @@ import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.demos.repo2.MyBuilding;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bytes.linked.LinkedByteInflow;
 import com.s8.io.bytes.linked.LinkedByteOutflow;
 
@@ -36,13 +36,13 @@ public class NdTest02 {
 		
 
 		MyBuilding building = MyBuilding.create();
-		originBranch.commit(new NdObject[] { null, building});
+		originBranch.commit(new RepoS8Object[] { null, building});
 		
 		building.variate();
-		originBranch.commit(new NdObject[] { null, building});
+		originBranch.commit(new RepoS8Object[] { null, building});
 		
 		building.variate();
-		originBranch.commit(new NdObject[] { null, building});
+		originBranch.commit(new RepoS8Object[] { null, building});
 		
 		
 		// test copy

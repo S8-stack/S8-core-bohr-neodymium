@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.NdType;
 
@@ -40,7 +40,7 @@ public class CompareNdModule {
 					writer.append("Object replacement: "+id+"\n");
 				}
 				else {
-					NdObject baseObject = baseVertex.getObject();
+					RepoS8Object baseObject = baseVertex.getObject();
 					type.deepCompare(baseObject, vertex.getObject(), writer);
 				}
 			} 
@@ -57,9 +57,9 @@ public class CompareNdModule {
 		
 		
 		/* <exposure> */
-		NdObject[] baseExposure = base.exposure;
+		RepoS8Object[] baseExposure = base.exposure;
 		int baseRange = baseExposure.length;
-		NdObject[] exposure = target.exposure;
+		RepoS8Object[] exposure = target.exposure;
 		int range = exposure.length;
 		if(range != baseRange) {
 			writer.append("Exposure length is not the same: "+range+"\n");
@@ -70,8 +70,8 @@ public class CompareNdModule {
 		
 		/* common part of range */
 		for(int slot = 0; slot < r; slot++) {
-			NdObject exposed = exposure[slot];
-			NdObject b = baseExposure[slot];
+			RepoS8Object exposed = exposure[slot];
+			RepoS8Object b = baseExposure[slot];
 			if(exposed != null && 
 				(b == null || !b.S8_id.equals(exposed.S8_id))) {
 				writer.append("Exposure is not the same: "+b.S8_id+"\n");

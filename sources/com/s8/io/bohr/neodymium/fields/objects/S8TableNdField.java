@@ -8,11 +8,15 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.BOHR_Types;
+import com.s8.api.bohr.BOHR_Types;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8Setter;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8Table;
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8Setter;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -23,13 +27,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
 import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 
@@ -153,11 +153,11 @@ public class S8TableNdField extends NdField {
 
 
 	@Override
-	public void sweep(NdObject object, GraphCrawler crawler) throws NdIOException {	
+	public void sweep(RepoS8Object object, GraphCrawler crawler) throws NdIOException {	
 	}
 
 	@Override
-	public void collectReferencedBlocks(NdObject object, Queue<String> references) {
+	public void collectReferencedBlocks(RepoS8Object object, Queue<String> references) {
 		/*
 		try {
 			BkRef<?> ref = (BkRef<?>) field.get(object);
@@ -183,21 +183,21 @@ public class S8TableNdField extends NdField {
 
 
 	@Override
-	public void computeFootprint(NdObject object, MemoryFootprint weight) throws NdIOException {
+	public void computeFootprint(RepoS8Object object, MemoryFootprint weight) throws NdIOException {
 		S8Table<?> value = (S8Table<?>) handler.get(object);
 		weight.reportBytes(1 + value.address.length() + 8);
 	}
 
 
 	@Override
-	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
+	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
 		S8Table<?> value = (S8Table<?>) handler.get(origin);
 		handler.set(clone, value);
 	}
 
 
 	@Override
-	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
+	public boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException {
 		S8Table<?> baseValue = (S8Table<?>) handler.get(base);
 		S8Table<?> updateValue = (S8Table<?>) handler.get(update);
 		return !S8Table.areEqual(baseValue, updateValue);
@@ -205,7 +205,7 @@ public class S8TableNdField extends NdField {
 
 
 	@Override
-	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
+	public NdFieldDelta produceDiff(RepoS8Object object) throws NdIOException {
 		return new S8TableNdFieldDelta(this, (S8Table<?>) handler.get(object));
 	}
 
@@ -217,7 +217,7 @@ public class S8TableNdField extends NdField {
 	
 
 	@Override
-	protected void printValue(NdObject object, Writer writer) throws IOException {
+	protected void printValue(RepoS8Object object, Writer writer) throws IOException {
 		S8Table<?> value = (S8Table<?>) handler.get(object);
 		if(value!=null) {
 			writer.write("(");
@@ -300,7 +300,7 @@ public class S8TableNdField extends NdField {
 		}
 
 		@Override
-		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
+		public void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException {
 			S8Table<?> value = (S8Table<?>) handler.get(object);
 			S8Table.write(value, outflow);
 		}
@@ -316,7 +316,7 @@ public class S8TableNdField extends NdField {
 
 
 	@Override
-	public boolean isValueResolved(NdObject object) throws NdIOException {
+	public boolean isValueResolved(RepoS8Object object) throws NdIOException {
 		// TODO Auto-generated method stub
 		return false;
 	}

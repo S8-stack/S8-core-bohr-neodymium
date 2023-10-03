@@ -1,6 +1,6 @@
 package com.s8.io.bohr.neodymium.demos.repo2;
 
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
+import com.s8.api.objects.annotations.S8ObjectType;
 
 
 

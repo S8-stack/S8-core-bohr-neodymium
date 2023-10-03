@@ -2,9 +2,9 @@ package com.s8.io.bohr.neodymium.fields;
 
 import java.io.IOException;
 
-import com.s8.io.bohr.atom.BOHR_Keywords;
-import com.s8.io.bohr.neodymium.object.NdObject;
-import com.s8.io.bytes.alpha.ByteOutflow;
+import com.s8.api.bohr.BOHR_Keywords;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.objects.repo.RepoS8Object;
 
 
 /**
@@ -39,7 +39,7 @@ public abstract class NdFieldComposer {
 	 * 
 	 * }
 	 */
-	public abstract void composeValue(NdObject object, ByteOutflow outflow) throws IOException;
+	public abstract void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException;
 
 
 
@@ -110,7 +110,7 @@ public abstract class NdFieldComposer {
 	 * @param outflow
 	 * @throws IOException
 	 */
-	public void compose(NdObject object, ByteOutflow outflow) throws IOException {
+	public void compose(RepoS8Object object, ByteOutflow outflow) throws IOException {
 		publishFieldHeader(outflow);
 		composeValue(object, outflow);
 	}

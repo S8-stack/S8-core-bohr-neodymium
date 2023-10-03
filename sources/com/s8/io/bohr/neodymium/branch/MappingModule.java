@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.NdConstants;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bohr.neodymium.type.NdType;
@@ -47,7 +47,7 @@ public class MappingModule {
 	 * @param objects
 	 * @throws IOException 
 	 */
-	public NdGraph remap(long version, NdObject[] objects, String branchName, long lastAssignedIndex) throws IOException {
+	public NdGraph remap(long version, RepoS8Object[] objects, String branchName, long lastAssignedIndex) throws IOException {
 		
 		
 		
@@ -69,13 +69,13 @@ public class MappingModule {
 		
 	
 		Queue<NdVertex> queue = new LinkedList<NdVertex>();
-		List<NdObject> rollback = new ArrayList<NdObject>();
+		List<RepoS8Object> rollback = new ArrayList<RepoS8Object>();
 		
 
 		GraphCrawler crawler = new GraphCrawler() {
 			
 			@Override
-			public void accept(NdObject object) throws NdIOException {
+			public void accept(RepoS8Object object) throws NdIOException {
 				if(!object.S8_spin) {
 					
 					/* retrieve type */
@@ -119,7 +119,7 @@ public class MappingModule {
 		/* prepare initial set */
 		int range = objects.length;
 		for(int port = 0; port < range; port ++) {
-			NdObject object = objects[port];
+			RepoS8Object object = objects[port];
 			if(object!=null) {
 				crawler.accept(object);
 			}

@@ -3,12 +3,12 @@ package com.s8.io.bohr.neodymium.branch.operations;
 import java.io.IOException;
 import java.util.List;
 
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraphDelta;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.ExposeNdObjectDelta;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.object.NdObjectDelta;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 
@@ -58,17 +58,17 @@ public class CommitNdModule {
 
 
 		/* <exposure> */
-		NdObject[] baseExposure = origin.exposure;
+		RepoS8Object[] baseExposure = origin.exposure;
 		int baseRange = baseExposure.length;
-		NdObject[] exposure = target.exposure;
+		RepoS8Object[] exposure = target.exposure;
 		int range = exposure.length;
 		int r = baseRange < range ? baseRange : range;
 
 
 		/* common part of range */
 		for(int slot = 0; slot < r; slot++) {
-			NdObject exposed = exposure[slot];
-			NdObject b = baseExposure[slot];
+			RepoS8Object exposed = exposure[slot];
+			RepoS8Object b = baseExposure[slot];
 			if(exposed != null && 
 					(b == null || !b.S8_id.equals(exposed.S8_id))) {
 				objectDeltas.add(new ExposeNdObjectDelta(exposed.S8_id, slot));
@@ -77,7 +77,7 @@ public class CommitNdModule {
 
 		/* range extension */
 		for(int slot = r; slot < range; slot++) {
-			NdObject exposed = exposure[slot];
+			RepoS8Object exposed = exposure[slot];
 			objectDeltas.add(new ExposeNdObjectDelta(exposed.S8_id, slot));
 		}
 

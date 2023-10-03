@@ -6,9 +6,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8Getter;
-import com.s8.io.bohr.atom.annotations.S8Setter;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8Getter;
+import com.s8.api.objects.annotations.S8Setter;
+import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;
@@ -19,13 +23,9 @@ import com.s8.io.bohr.neodymium.fields.NdFieldParser;
 import com.s8.io.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
 import com.s8.io.bohr.neodymium.handlers.NdHandlerType;
-import com.s8.io.bohr.neodymium.object.NdObject;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;
 import com.s8.io.bohr.neodymium.type.BuildScope;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**
@@ -49,7 +49,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				S8Field annotation = field.getAnnotation(S8Field.class);
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
-					if(NdObject.class.isAssignableFrom(componentType)) {
+					if(RepoS8Object.class.isAssignableFrom(componentType)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.FIELD, 
 								componentType);
 						properties.setFieldAnnotation(annotation);
@@ -73,7 +73,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				S8Setter annotation = method.getAnnotation(S8Setter.class);
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
-					if(NdObject.class.isAssignableFrom(componentType)) {
+					if(RepoS8Object.class.isAssignableFrom(componentType)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
 								Array.class, componentType);
 						properties.setSetterAnnotation(annotation);
@@ -97,7 +97,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 				S8Getter annotation = method.getAnnotation(S8Getter.class);
 				if(annotation != null) {
 					Class<?> componentType = baseType.getComponentType();
-					if(NdObject.class.isAssignableFrom(componentType)) {
+					if(RepoS8Object.class.isAssignableFrom(componentType)) {
 						NdFieldProperties properties = new NdFieldProperties(this, NdHandlerType.GETTER_SETTER_PAIR, 
 								Array.class, componentType);
 						properties.setGetterAnnotation(annotation);
@@ -161,10 +161,10 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 	@Override
-	public void sweep(NdObject object, GraphCrawler crawler) throws NdIOException {
-		NdObject[] array = (NdObject[]) handler.get(object);
+	public void sweep(RepoS8Object object, GraphCrawler crawler) throws NdIOException {
+		RepoS8Object[] array = (RepoS8Object[]) handler.get(object);
 		if(array!=null) {
-			for(NdObject item : array) {
+			for(RepoS8Object item : array) {
 				if(item!=null) {
 					crawler.accept(item);
 				}
@@ -174,7 +174,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 	@Override
-	public void collectReferencedBlocks(NdObject object, Queue<String> references) {
+	public void collectReferencedBlocks(RepoS8Object object, Queue<String> references) {
 		// No ext references
 	}
 
@@ -185,8 +185,8 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 	}
 
 	@Override
-	public void computeFootprint(NdObject object, MemoryFootprint weight) throws NdIOException {
-		NdObject[] array = (NdObject[]) handler.get(object);
+	public void computeFootprint(RepoS8Object object, MemoryFootprint weight) throws NdIOException {
+		RepoS8Object[] array = (RepoS8Object[]) handler.get(object);
 		if(array!=null) {
 			weight.reportInstance();
 			weight.reportReferences(array.length);	
@@ -195,14 +195,14 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 	@Override
-	public void deepClone(NdObject origin, NdObject clone, BuildScope scope) throws NdIOException {
-		NdObject[] objects = (NdObject[]) handler.get(origin);
+	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
+		RepoS8Object[] objects = (RepoS8Object[]) handler.get(origin);
 		if(objects!=null) {
 			
 			int n = objects.length;
 			String[] itemIdentifers = new String[n];
 			for(int i=0; i<n; i++) {
-				NdObject object = objects[i];
+				RepoS8Object object = objects[i];
 				itemIdentifers[i] = object != null ? object.S8_id : null;
 			}
 			
@@ -214,7 +214,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
  					Object clonedArray = Array.newInstance(componentType, n);
 					for(int index = 0; index < n; index++) {
 						String id = itemIdentifers[index];
-						NdObject indexedObject = (id != null) ? scope.retrieveObject(id) : null;
+						RepoS8Object indexedObject = (id != null) ? scope.retrieveObject(id) : null;
 						Array.set(clonedArray, index, indexedObject);
 					}
 					
@@ -230,20 +230,20 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 	@Override
-	public boolean hasDiff(NdObject base, NdObject update) throws NdIOException {
-		NdObject[] baseValue = (NdObject[]) handler.get(base);
-		NdObject[] updateValue = (NdObject[]) handler.get(update);
+	public boolean hasDiff(RepoS8Object base, RepoS8Object update) throws NdIOException {
+		RepoS8Object[] baseValue = (RepoS8Object[]) handler.get(base);
+		RepoS8Object[] updateValue = (RepoS8Object[]) handler.get(update);
 		return !areEqual(baseValue, updateValue);
 	}
 
 	@Override
-	public NdFieldDelta produceDiff(NdObject object) throws NdIOException {
-		NdObject[] array = (NdObject[]) handler.get(object);
+	public NdFieldDelta produceDiff(RepoS8Object object) throws NdIOException {
+		RepoS8Object[] array = (RepoS8Object[]) handler.get(object);
 		String[] indices = null;
 		if(array!=null) {
 			int n = array.length;
 			indices = new String[n];
-			NdObject item;
+			RepoS8Object item;
 			for(int i=0; i<n; i++) {
 				item = array[i];
 				indices[i] = item != null ? item.S8_id : null;
@@ -255,7 +255,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 
 
-	private static boolean areEqual(NdObject[] array0, NdObject[] array1) {
+	private static boolean areEqual(RepoS8Object[] array0, RepoS8Object[] array1) {
 
 		// check nulls
 		if(array0 == null) { return array1==null; }
@@ -267,7 +267,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 		if(n0!=n1) { return false; }
 
 		// check values
-		NdObject obj0, obj1;
+		RepoS8Object obj0, obj1;
 		for(int i=0; i<n0; i++) {
 			obj0 = array0[i];
 			obj1 = array1[i];
@@ -294,7 +294,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 
 	@Override
 	public void forEach(Object iterable, ItemConsumer consumer) throws IOException {
-		NdObject[] array = (NdObject[]) iterable;
+		RepoS8Object[] array = (RepoS8Object[]) iterable;
 		if(array!=null) {
 			int n = array.length;
 			for(int i=0; i<n; i++) {
@@ -304,7 +304,7 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 	}
 
 	@Override
-	public boolean isValueResolved(NdObject object) {
+	public boolean isValueResolved(RepoS8Object object) {
 		return false; // never resolved
 	}
 
@@ -397,15 +397,15 @@ public class S8ObjectArrayNdField extends CollectionNdField {
 		}
 
 		@Override
-		public void composeValue(NdObject object, ByteOutflow outflow) throws IOException {
+		public void composeValue(RepoS8Object object, ByteOutflow outflow) throws IOException {
 
 			// array
-			NdObject[] array = (NdObject[]) handler.get(object);
+			RepoS8Object[] array = (RepoS8Object[]) handler.get(object);
 			if(array!=null) {
 				int length = array.length;
 				outflow.putUInt7x(length);
 				for(int i=0; i<length; i++) {
-					NdObject itemObject = array[i];
+					RepoS8Object itemObject = array[i];
 					outflow.putStringUTF8(itemObject != null ? itemObject.S8_id : null);
 				}
 			}

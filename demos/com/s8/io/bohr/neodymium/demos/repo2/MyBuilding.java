@@ -3,9 +3,9 @@ package com.s8.io.bohr.neodymium.demos.repo2;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.io.bohr.atom.annotations.S8Field;
-import com.s8.io.bohr.atom.annotations.S8ObjectType;
-import com.s8.io.bohr.neodymium.object.NdObject;
+import com.s8.api.objects.annotations.S8Field;
+import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.objects.repo.RepoS8Object;
 
 
 /**
@@ -17,7 +17,7 @@ import com.s8.io.bohr.neodymium.object.NdObject;
  * 
  */
 @S8ObjectType(name = "my-building")
-public class MyBuilding extends NdObject {
+public class MyBuilding extends RepoS8Object {
 
 	public final static long HAS_CHANGED = 0x02;
 	

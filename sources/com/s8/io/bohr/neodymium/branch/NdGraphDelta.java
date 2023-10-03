@@ -1,21 +1,21 @@
 package com.s8.io.bohr.neodymium.branch;
 
-import static com.s8.io.bohr.atom.BOHR_Keywords.CLOSE_JUMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_AUTHOR;
-import static com.s8.io.bohr.atom.BOHR_Keywords.DEFINE_JUMP_COMMENT;
-import static com.s8.io.bohr.atom.BOHR_Keywords.OPEN_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.CLOSE_JUMP;
+import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_AUTHOR;
+import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_COMMENT;
+import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
+import static com.s8.api.bohr.BOHR_Keywords.OPEN_JUMP;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.bytes.MemoryFootprint;
 import com.s8.io.bohr.neodymium.branch.endpoint.NdOutbound;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdObjectDelta;
 import com.s8.io.bohr.neodymium.type.BuildScope;
-import com.s8.io.bytes.alpha.ByteOutflow;
-import com.s8.io.bytes.alpha.MemoryFootprint;
 
 
 /**

@@ -2,8 +2,9 @@ package com.s8.io.bohr.neodymium.object;
 
 import java.io.IOException;
 
-import com.s8.io.bytes.alpha.ByteInflow;
-import com.s8.io.bytes.alpha.ByteOutflow;
+import com.s8.api.bytes.ByteInflow;
+import com.s8.api.bytes.ByteOutflow;
+import com.s8.api.objects.repo.RepoS8Object;
 
 /**
  * 
@@ -14,7 +15,7 @@ import com.s8.io.bytes.alpha.ByteOutflow;
  *
  * @param <T>
  */
-public final class NdRef<T extends NdObject> {
+public final class NdRef<T extends RepoS8Object> {
 	
 	
 	/**
@@ -75,7 +76,7 @@ public final class NdRef<T extends NdObject> {
 	
 
 	
-	public static <T extends NdObject> NdRef<T> read(ByteInflow inflow) throws IOException {
+	public static <T extends RepoS8Object> NdRef<T> read(ByteInflow inflow) throws IOException {
 		String address = inflow.getStringUTF8();
 		if(address != null) {
 			String branch = inflow.getStringUTF8();
