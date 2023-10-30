@@ -16,7 +16,7 @@ import com.s8.api.objects.annotations.S8Field;
 import com.s8.api.objects.annotations.S8Getter;
 import com.s8.api.objects.annotations.S8Setter;
 import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.io.bohr.atom.S8Table;
+import com.s8.core.io.bohr.atom.S8Table;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;

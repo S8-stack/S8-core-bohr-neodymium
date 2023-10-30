@@ -9,13 +9,13 @@ import java.util.Map;
 import java.util.Queue;
 
 import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.core.io.bytes.base64.Base64IdGenerator;
 import com.s8.io.bohr.neodymium.NdConstants;
 import com.s8.io.bohr.neodymium.codebase.NdCodebase;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.GraphCrawler;
 import com.s8.io.bohr.neodymium.type.NdType;
-import com.s8.io.bytes.base64.Base64IdGenerator;
 
 
 /**

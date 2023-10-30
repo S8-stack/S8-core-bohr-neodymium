@@ -7,7 +7,7 @@ import java.util.Queue;
 import com.s8.api.bytes.ByteInflow;
 import com.s8.api.bytes.MemoryFootprint;
 import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.io.bohr.atom.S8ShellStructureException;
+import com.s8.core.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;

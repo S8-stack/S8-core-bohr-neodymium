@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.io.bohr.atom.S8ShellStructureException;
+import com.s8.core.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraphDelta;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;

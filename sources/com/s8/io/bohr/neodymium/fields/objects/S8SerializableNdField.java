@@ -17,7 +17,7 @@ import com.s8.api.objects.annotations.S8Getter;
 import com.s8.api.objects.annotations.S8Setter;
 import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.api.objects.serial.BohrSerializable;
-import com.s8.io.bohr.atom.serial.BohrSerialUtilities;
+import com.s8.core.io.bohr.atom.serial.BohrSerialUtilities;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;

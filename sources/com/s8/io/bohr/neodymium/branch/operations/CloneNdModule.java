@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.io.bohr.atom.S8ShellStructureException;
+import com.s8.core.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.NdGraph;
 import com.s8.io.bohr.neodymium.object.NdVertex;
 import com.s8.io.bohr.neodymium.type.BuildScope;

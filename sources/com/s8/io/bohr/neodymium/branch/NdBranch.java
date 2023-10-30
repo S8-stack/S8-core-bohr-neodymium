@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.s8.api.objects.repo.RepoS8Object;
-import com.s8.io.bohr.atom.S8ShellStructureException;
+import com.s8.core.io.bohr.atom.S8ShellStructureException;
 import com.s8.io.bohr.neodymium.branch.operations.CloneNdModule;
 import com.s8.io.bohr.neodymium.branch.operations.CommitNdModule;
 import com.s8.io.bohr.neodymium.branch.operations.CompareNdModule;
