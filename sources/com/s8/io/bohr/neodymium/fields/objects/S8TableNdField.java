@@ -8,7 +8,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Queue;
 
-import com.s8.api.bohr.BOHR_Types;
 import com.s8.api.bytes.ByteInflow;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.bytes.MemoryFootprint;
@@ -17,6 +16,7 @@ import com.s8.api.objects.annotations.S8Getter;
 import com.s8.api.objects.annotations.S8Setter;
 import com.s8.api.objects.repo.RepoS8Object;
 import com.s8.core.io.bohr.atom.S8Table;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Types;
 import com.s8.io.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.io.bohr.neodymium.exceptions.NdIOException;
 import com.s8.io.bohr.neodymium.fields.NdField;

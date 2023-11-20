@@ -3,8 +3,8 @@ package com.s8.io.bohr.neodymium.fields.collections;
 import java.io.IOException;
 import java.io.Writer;
 
-import com.s8.api.bohr.BOHR_Types;
 import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.core.io.bohr.atom.protocol.BOHR_Types;
 import com.s8.io.bohr.neodymium.fields.NdField;
 import com.s8.io.bohr.neodymium.handlers.NdHandler;
 import com.s8.io.bohr.neodymium.properties.NdFieldProperties;

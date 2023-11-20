@@ -1,10 +1,10 @@
 package com.s8.io.bohr.neodymium.branch;
 
-import static com.s8.api.bohr.BOHR_Keywords.CLOSE_JUMP;
-import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_AUTHOR;
-import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_COMMENT;
-import static com.s8.api.bohr.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
-import static com.s8.api.bohr.BOHR_Keywords.OPEN_JUMP;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.CLOSE_JUMP;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.DEFINE_JUMP_AUTHOR;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.DEFINE_JUMP_COMMENT;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.DEFINE_JUMP_TIMESTAMP;
+import static com.s8.core.io.bohr.atom.protocol.BOHR_Keywords.OPEN_JUMP;
 
 import java.io.IOException;
 import java.util.ArrayList;
