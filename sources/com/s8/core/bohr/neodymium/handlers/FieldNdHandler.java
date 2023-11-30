@@ -3,8 +3,8 @@ package com.s8.core.bohr.neodymium.handlers;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.core.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.core.bohr.neodymium.exceptions.NdIOException;
 

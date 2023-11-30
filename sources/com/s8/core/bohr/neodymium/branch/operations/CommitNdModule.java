@@ -3,7 +3,7 @@ package com.s8.core.bohr.neodymium.branch.operations;
 import java.io.IOException;
 import java.util.List;
 
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 import com.s8.core.bohr.neodymium.branch.NdGraph;
 import com.s8.core.bohr.neodymium.branch.NdGraphDelta;

@@ -3,7 +3,7 @@ package com.s8.core.bohr.neodymium.codebase;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import com.s8.api.objects.annotations.S8ObjectType;
+import com.s8.api.annotations.S8ObjectType;
 import com.s8.core.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.core.bohr.neodymium.fields.NdFieldFactory;
 import com.s8.core.bohr.neodymium.type.NdTypeBuilder;

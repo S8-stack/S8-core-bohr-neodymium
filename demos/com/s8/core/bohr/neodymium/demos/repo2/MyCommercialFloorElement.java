@@ -1,8 +1,8 @@
 package com.s8.core.bohr.neodymium.demos.repo2;
 
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8ObjectType;
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8ObjectType;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 
 
 

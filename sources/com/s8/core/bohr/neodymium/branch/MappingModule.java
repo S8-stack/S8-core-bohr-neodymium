@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.neodymium.NdConstants;
 import com.s8.core.bohr.neodymium.codebase.NdCodebase;
 import com.s8.core.bohr.neodymium.exceptions.NdIOException;

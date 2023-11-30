@@ -6,13 +6,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Queue;
 
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8Getter;
+import com.s8.api.annotations.S8Setter;
 import com.s8.api.bytes.ByteInflow;
 import com.s8.api.bytes.ByteOutflow;
 import com.s8.api.bytes.MemoryFootprint;
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8Getter;
-import com.s8.api.objects.annotations.S8Setter;
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.core.bohr.neodymium.exceptions.NdIOException;
 import com.s8.core.bohr.neodymium.fields.NdField;

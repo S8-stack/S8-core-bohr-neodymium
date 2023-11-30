@@ -6,7 +6,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.atom.S8ShellStructureException;
 import com.s8.core.bohr.neodymium.branch.operations.CloneNdModule;
 import com.s8.core.bohr.neodymium.branch.operations.CommitNdModule;

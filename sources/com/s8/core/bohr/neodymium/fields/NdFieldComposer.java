@@ -3,7 +3,7 @@ package com.s8.core.bohr.neodymium.fields;
 import java.io.IOException;
 
 import com.s8.api.bytes.ByteOutflow;
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.atom.protocol.BOHR_Keywords;
 
 

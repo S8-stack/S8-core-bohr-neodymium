@@ -1,9 +1,9 @@
 package com.s8.core.bohr.neodymium.properties;
 
+import com.s8.api.annotations.S8Field;
+import com.s8.api.annotations.S8Getter;
+import com.s8.api.annotations.S8Setter;
 import com.s8.api.exceptions.S8BuildException;
-import com.s8.api.objects.annotations.S8Field;
-import com.s8.api.objects.annotations.S8Getter;
-import com.s8.api.objects.annotations.S8Setter;
 import com.s8.core.bohr.neodymium.exceptions.NdBuildException;
 import com.s8.core.bohr.neodymium.fields.NdFieldPrototype;
 import com.s8.core.bohr.neodymium.handlers.NdHandlerType;

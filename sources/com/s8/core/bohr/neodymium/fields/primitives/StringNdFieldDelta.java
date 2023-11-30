@@ -1,7 +1,7 @@
 package com.s8.core.bohr.neodymium.fields.primitives;
 
 import com.s8.api.bytes.MemoryFootprint;
-import com.s8.api.objects.repo.RepoS8Object;
+import com.s8.api.flow.repository.objects.RepoS8Object;
 import com.s8.core.bohr.neodymium.exceptions.NdIOException;
 import com.s8.core.bohr.neodymium.fields.NdFieldDelta;
 import com.s8.core.bohr.neodymium.type.BuildScope;
