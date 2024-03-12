@@ -21,6 +21,7 @@ module com.s8.core.bohr.neodymium {
 	exports com.s8.core.bohr.neodymium.object;
 	exports com.s8.core.bohr.neodymium.handlers;
 	exports com.s8.core.bohr.neodymium.properties;
+	
 	exports com.s8.core.bohr.neodymium.exceptions;
 
 	exports com.s8.core.bohr.neodymium.fields;
