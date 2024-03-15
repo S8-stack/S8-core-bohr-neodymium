@@ -183,7 +183,12 @@ public class S8SerializableNdField<T extends BohrSerializable> extends NdField {
 	@Override
 	public void deepClone(RepoS8Object origin, RepoS8Object clone, BuildScope scope) throws NdIOException {
 		BohrSerializable value = (BohrSerializable) handler.get(origin);
-		handler.set(clone, value.deepClone());
+		if(value != null) {
+			handler.set(clone, value.deepClone());	
+		}
+		else {
+			handler.set(clone, null);
+		}
 	}
 
 
