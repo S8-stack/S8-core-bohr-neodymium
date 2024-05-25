@@ -12,7 +12,7 @@ module com.s8.core.bohr.neodymium {
 	/* <neodymium> */
 
 	exports com.s8.core.bohr.neodymium.codebase;
-	exports com.s8.core.bohr.neodymium.type;
+	
 	
 	exports com.s8.core.bohr.neodymium.branch;
 	exports com.s8.core.bohr.neodymium.branch.endpoint;
@@ -30,6 +30,9 @@ module com.s8.core.bohr.neodymium {
 	exports com.s8.core.bohr.neodymium.fields.objects;
 	exports com.s8.core.bohr.neodymium.fields.collections;
 	
+	exports com.s8.core.bohr.neodymium.repository;
+	
+	exports com.s8.core.bohr.neodymium.type;
 	
 	
 	exports com.s8.core.bohr.neodymium.demos.repo0;
@@ -45,4 +48,5 @@ module com.s8.core.bohr.neodymium {
 	requires transitive com.s8.api;
 	requires transitive com.s8.core.io.bytes;
 	requires transitive com.s8.core.bohr.atom;
+	requires com.s8.core.io.json;
 }

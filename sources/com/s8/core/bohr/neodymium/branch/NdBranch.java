@@ -87,6 +87,10 @@ public class NdBranch {
 	private MappingModule remapModule;
 	
 
+	/*
+	 * I/O module : true if changes have not been persisted to the Disk
+	 */
+	public boolean nIO_hasUnsavedChanges;
 
 
 
