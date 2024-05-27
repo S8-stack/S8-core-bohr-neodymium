@@ -32,6 +32,11 @@ public class NdRepositoryMetadata implements S8RepositoryMetadata {
 
 	@JSON_Field(name = "branches")
 	public Map<String, NdBranchMetadata> branches;
+	
+	/*
+	 * I/O module : true if changes have not been persisted to the Disk
+	 */
+	public boolean nIO_hasUnsavedChanges;
 
 	
 	/**

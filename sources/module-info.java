@@ -18,6 +18,7 @@ module com.s8.core.bohr.neodymium {
 	exports com.s8.core.bohr.neodymium.branch.endpoint;
 	exports com.s8.core.bohr.neodymium.branch.operations;
 	
+	exports com.s8.core.bohr.neodymium.io;
 	exports com.s8.core.bohr.neodymium.object;
 	exports com.s8.core.bohr.neodymium.handlers;
 	exports com.s8.core.bohr.neodymium.properties;
@@ -48,5 +49,5 @@ module com.s8.core.bohr.neodymium {
 	requires transitive com.s8.api;
 	requires transitive com.s8.core.io.bytes;
 	requires transitive com.s8.core.bohr.atom;
-	requires com.s8.core.io.json;
+	requires transitive com.s8.core.io.json;
 }
