@@ -3,7 +3,6 @@ package com.s8.core.bohr.neodymium.io;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -57,8 +56,10 @@ public class NdIOModule {
 	public void writeMetadata(NdRepositoryMetadata metadata, Path path) throws IOException {
 		if(metadata.nIO_hasUnsavedChanges) {
 			FileChannel channel = FileChannel.open(path, new OpenOption[]{ 
-					StandardOpenOption.WRITE
+					StandardOpenOption.WRITE, StandardOpenOption.CREATE
 			});
+			
+			
 
 			JOOS_BufferedFileWriter writer = new JOOS_BufferedFileWriter(channel, StandardCharsets.UTF_8, 256);
 
@@ -141,7 +142,7 @@ public class NdIOModule {
 	public void writeBranch(NdBranch branch, Path path) throws IOException {		
 		if(branch.nIO_hasUnsavedChanges) {
 			
-			Files.createDirectories(path);
+			
 	
 			/* build inflow */
 			LinkedByteOutflow outflow = new LinkedByteOutflow();
